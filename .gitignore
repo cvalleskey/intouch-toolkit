@@ -1,0 +1,18 @@
+# build artefacts
+intouch-toolkit.sketchplugin
+
+# npm
+node_modules
+.npm
+npm-debug.log
+
+# mac
+.DS_Store
+
+# WebStorm
+.idea
+
+# sketch
+# sketch-assets
+
+OLD____Intouch Toolkit.sketchplugin/*

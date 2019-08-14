@@ -1,0 +1,72 @@
+{
+  "compatibleVersion": "51",
+  "bundleVersion": 1,
+  "icon" : "icon.png",
+  "commands": [
+    {
+      "name": "Generate grid...",
+      "identifier": "intouch-toolkit.generate-grid",
+      "shortcut": "command option shift g",
+      "script": "./generate-grid.js",
+      "handlers": {
+        "run": "onRun",
+        "actions": {
+          "Shutdown": "onShutdown"
+        }
+      }
+    },
+    {
+      "name": "Small",
+      "identifier": "intouch-toolkit.create-padding.small",
+      "script": "./create-padding.js",
+      "handlers": {
+        "run": "paddingSmall"
+      }
+    },
+    {
+      "name": "Medium",
+      "identifier": "intouch-toolkit.create-padding.medium",
+      "script": "./create-padding.js",
+      "handlers": {
+        "run": "paddingMedium"
+      }
+    },
+    {
+      "name": "Large",
+      "identifier": "intouch-toolkit.create-padding.large",
+      "script": "./create-padding.js",
+      "handlers": {
+        "run": "paddingLarge"
+      }
+    },
+    {
+      "name": "Export to PDF...",
+      "identifier": "intouch-toolkit.export-jpgs-to-pdf",
+      "shortcut": "command option shift e",
+      "script": "./export-jpgs-to-pdf.js",
+      "handlers": {
+        "run": "onRun",
+        "actions": {
+          "Shutdown": "onShutdown"
+        }
+      },
+      "description": "Quick export all selected Artboards into a PDF document."
+    }
+  ],
+  "menu": {
+    "title": "Intouch Toolkit",
+    "items": [
+      "intouch-toolkit.generate-grid",
+      "intouch-toolkit.export-jpgs-to-pdf",
+      {
+        "title" : "Create Padding",
+        "items" : [
+          "intouch-toolkit.create-padding.small",
+          "intouch-toolkit.create-padding.medium",
+          "intouch-toolkit.create-padding.large"
+        ]
+      }
+    ]
+  },
+  "description": "Productivity tools for use in project work"
+}
