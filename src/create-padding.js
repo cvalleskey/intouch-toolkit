@@ -66,7 +66,7 @@ function makePadding(size) {
         }
       });
 
-      var shape2 = new Document.ShapePath({
+      var maskShape = new Document.ShapePath({
         parent: shapePath, // todo: test outside of an artboard
         frame: {
           x: sizes[size],
