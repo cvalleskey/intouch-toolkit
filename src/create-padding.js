@@ -3,6 +3,7 @@ import Document from 'sketch/dom';
 
 var document = Document.getSelectedDocument();
 var selectedLayers = document.selectedLayers;
+let page = document.selectedPage;
 
 // let imageurl = "./shade-blue.png";
 // let imageurl_nsurl = NSURL.alloc().initWithString(imageurl);
@@ -15,12 +16,12 @@ var selectedLayers = document.selectedLayers;
 var sizes = {
   "thin" : 1,
   "thick" : 2,
-  "xxsmall" : 4,
-  "xsmall" : 8,
-  "small" : 16,
-  "medium" : 32,
-  "large" : 64,
-  "xlarge" : 128
+  "xsmall" : 4,
+  "small" : 8,
+  "medium" : 16,
+  "large" : 32,
+  "xlarge" : 64,
+  "xxlarge" : 128
 }
 
 function makePadding(size) {
@@ -29,26 +30,19 @@ function makePadding(size) {
 
     selectedLayers.forEach(function (layer, i) {
 
-
-      // var rectShapeGroup = MSShapeGroup.shapeWithRect(NSMakeRect(0, 0, layer.frame.width, layer.frame.height));
-      // var rectShape = MSRectangleShape.new();
-      // rectShape.frame = MSRect.rectWithRect(NSMakeRect(sizes[size], sizes[size], layer.frame.width - sizes[size]*2, layer.frame.height - sizes[size]*2));
-      // rectShapeGroup.layers().addObject(rectShape);
-      // rectShapeGroup.layers()[1].setBooleanOperation(1); // subtract
-      // rectShapeGroup.setAsParentOnChildren();
-      // var fill = rectShapeGroup.style().addStylePartOfType(0);
-      // fill.color = MSColor.blackColor();
-      //
-      // context.document.currentPage().addLayers([rectShapeGroup]);
+      var parent = layer.getParentArtboard();
+      if(parent == undefined) {
+        parent = page;
+      }
 
       var shapePath = new Document.Shape({
-        parent: layer.getParentArtboard(), // todo: test outside of an artboard
+        parent: parent, // todo: test outside of an artboard
         name : "🔲 Padding " + size,
         frame: {
-          x: layer.frame.x, //+ sizes[size],
-          y: layer.frame.y, //+ sizes[size],
-          width: layer.frame.width, //- sizes[size]*2,
-          height: layer.frame.height //- sizes[size]*2
+          x: layer.frame.x,
+          y: layer.frame.y,
+          width: layer.frame.width,
+          height: layer.frame.height
         },
         style: {
           fills: [
@@ -82,11 +76,14 @@ function makePadding(size) {
         }
       });
 
-      UI.message('hmm..');
+      UI.message('Padding ' + size + ' (' + sizes[size] + 'px) added.');
     });
   }
 }
 
+export function paddingXSmall() { makePadding('xsmall'); }
 export function paddingSmall() { makePadding('small'); }
 export function paddingMedium() { makePadding('medium'); }
 export function paddingLarge() { makePadding('large'); }
+export function paddingXLarge() { makePadding('xlarge'); }
+export function paddingXXLarge() { makePadding('xxlarge'); }

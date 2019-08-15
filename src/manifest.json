@@ -16,6 +16,14 @@
       }
     },
     {
+      "name": "XSmall",
+      "identifier": "intouch-toolkit.create-padding.xsmall",
+      "script": "./create-padding.js",
+      "handlers": {
+        "run": "paddingXSmall"
+      }
+    },
+    {
       "name": "Small",
       "identifier": "intouch-toolkit.create-padding.small",
       "script": "./create-padding.js",
@@ -40,6 +48,22 @@
       }
     },
     {
+      "name": "XLarge",
+      "identifier": "intouch-toolkit.create-padding.xlarge",
+      "script": "./create-padding.js",
+      "handlers": {
+        "run": "paddingXLarge"
+      }
+    },
+    {
+      "name": "XXLarge",
+      "identifier": "intouch-toolkit.create-padding.xxlarge",
+      "script": "./create-padding.js",
+      "handlers": {
+        "run": "paddingXXLarge"
+      }
+    },
+    {
       "name": "Export to PDF...",
       "identifier": "intouch-toolkit.export-jpgs-to-pdf",
       "shortcut": "command option shift e",
@@ -61,9 +85,12 @@
       {
         "title" : "Create Padding",
         "items" : [
+          "intouch-toolkit.create-padding.xsmall",
           "intouch-toolkit.create-padding.small",
           "intouch-toolkit.create-padding.medium",
-          "intouch-toolkit.create-padding.large"
+          "intouch-toolkit.create-padding.large",
+          "intouch-toolkit.create-padding.xlarge",
+          "intouch-toolkit.create-padding.xxlarge"
         ]
       }
     ]
