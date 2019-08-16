@@ -5,23 +5,30 @@ import Document from 'sketch/dom'
 
 const webviewIdentifier = 'intouch-toolkit.webview'
 
+function loadLocalImage(filePath) {
+    if(!NSFileManager.defaultManager().fileExistsAtPath(filePath)) {
+        return null;
+    }
+    return NSImage.alloc().initWithContentsOfFile(filePath);
+}
+
 export default function () {
   const options = {
     identifier: webviewIdentifier,
     width: 480,
-    height: 300,
+    height: 350,
     show: false,
     title: 'Generate Grid',
     titleBarStyle: 'hiddenInset'
   }
   const settings = {
     containerWidth : 1180,
-    outerMargin: 20,
-    marginWidth : 0.02,
+    marginSize: 20,
+    gutterSize : '2%',
     colors : {
-      column : '#0FFF00',
-      outerMargin : '#FF0000',
-      margin : '#FF0000'
+      column : '#00FF0005',
+      gutter : '#F32C3A',
+      margin : '#456BF9'
     },
     columnCount: 12
   }
@@ -47,14 +54,18 @@ export default function () {
     var selection = document.selectedLayers;
     var selected = (selection.length == 1)? selection.layers[0] : false;
 
-    var columns = Number(s.columns);
+    var columns = s.columns;
+    var gutter = Number(s.gutter);
+    var gutterSize = s.gutterSize.includes("%")? s.gutterSize : Number(s.gutterSize);
+    var margin = Number(s.margin);
+    var marginSize = s.marginSize.includes("%")? s.marginSize : Number(s.marginSize);
+
+    // Math to change breakpoint if artboard is selected vs. object, and if the size is smaller than the max
     if(s.breakpoint == "auto") {
       var breakpoint = s.breakpoint;
     } else {
       var breakpoint = Number(s.breakpoint);
     }
-    var margin = Number(s.margin);
-    var outerMargin = Number(s.outerMargin);
 
     if(selected) {
       if(breakpoint == "auto") {
@@ -66,11 +77,43 @@ export default function () {
       breakpoint = settings.containerWidth;
     }
 
-    //UI.message('breakpoint: ' + breakpoint);
+    // Calculate margin width based on number or percent
+    var pixelMarginSize = marginSize;
+    if(typeof marginSize == "string") {
+      pixelMarginSize = breakpoint * (marginSize.replace("%", "") / 100);
+    }
+    if(margin == 0) {
+      pixelMarginSize = 0;
+    }
 
-    let containerFinalWidth = breakpoint - (settings.outerMargin * 2 * outerMargin);
-    let mWidth = containerFinalWidth * (settings.marginWidth * margin);
-    let cWidth = Number(((containerFinalWidth - (mWidth)*(settings.columnCount-1)) / settings.columnCount).toFixed(2));
+    // Calculate main container space, minus margin on both sides
+    let containerFinalWidth = breakpoint - (pixelMarginSize * 2);
+
+    // Calculate single gutter width
+    // 1140 * 2%
+    if(typeof gutterSize == "string") {
+      var pixelGutterSize = containerFinalWidth * (gutterSize.replace("%", "") / 100);
+    } else {
+      var pixelGutterSize = gutterSize;
+    }
+    if(gutter == 0) {
+      pixelGutterSize = 0;
+    }
+
+    //UI.message('pixelGutterSize: ' + pixelGutterSize);
+
+    // Calculate single column width
+    let pixelColumnWidth = Number(((containerFinalWidth - (pixelGutterSize)*(settings.columnCount-1)) / settings.columnCount).toFixed(2));
+
+    // if(typeof gutterSize == "number") {
+    //   let mWidth = containerFinalWidth * (pixelMarginSize * margin);
+    // } else {
+    //   let percentWidth = gutterSize.replace("%", "") / 100;
+    //   let mWidth = containerFinalWidth * (percentWidth * margin);
+    // }
+
+    //let mWidth = containerFinalWidth * (marginSize * margin);
+
 
     var columnsArray = [];
 
@@ -114,44 +157,44 @@ export default function () {
 
   		var column = columns[i];
 
-      // Add inner margin
-      if(i == 0 && outerMargin) {
+      // Add outer margin
+      if(i == 0 && margin) {
         columnsArray.push({
-          type: 'outerMargin',
-          width : settings.outerMargin
+          type: 'margin',
+          width : pixelMarginSize
         });
       }
 
-      // Add margin
-      if(i != 0 && margin) {
+      // Add gutter
+      if(i != 0 && gutter) {
         columnsArray.push({
-          type: 'margin',
-          width : mWidth
+          type: 'gutter',
+          width : pixelGutterSize
         });
       }
       // Add column
       columnsArray.push({
         type: 'column',
-        width: Number(((column-1) * mWidth + column * cWidth).toFixed(2))
+        width: Number(((column-1) * pixelGutterSize + column * pixelColumnWidth).toFixed(2)) // pixelMarginSize
       });
 
-      // Add inner margin
-      if(i == (columns.length-1) && outerMargin) {
+      // Add outer margin
+      if(i == (columns.length-1) && margin) {
         columnsArray.push({
-          type: 'outerMargin',
-          width : settings.outerMargin
+          type: 'margin',
+          width : pixelMarginSize
         });
       }
     }
 
     var gridSettings = {
-      parent : page,
       name : '📐 Grid',
       frame : {
         width : breakpoint,
         height : (selection.length == 1)? selected.frame.height : 100
       }
     }
+
     if(selected.type == "Artboard") {
       gridSettings.parent = selected;
       gridSettings.frame.x = (selected.frame.width - breakpoint) / 2;
@@ -163,7 +206,11 @@ export default function () {
         gridSettings.frame.x = (selected.frame.width - breakpoint) / 2;
       }
       gridSettings.frame.y = selected.frame.y;
-      gridSettings.parent = selected.getParentArtboard();
+      if(selected.getParentArtboard() == undefined) {
+        gridSettings.parent = page;
+      } else {
+        gridSettings.parent = selected.getParentArtboard();
+      }
     }
 
     var gridGroup = new Document.Group(gridSettings);
@@ -184,23 +231,23 @@ export default function () {
             width: el.width,
             height: (selection.length == 1)? selection.layers[0].frame.height : 100
           },
-          style: { fills: [settings.colors[el.type] + '22'] }
+          style: { fills: [settings.colors.column] }
       });
-      if(!margin && el.type == 'column') {
-        shape.style.innerShadows = [
+
+      if(el.type == "gutter" || el.type == "margin") {
+        shape.style.fills = [
           {
-            color : settings.colors['margin'],
-            x : -0.5,
-            y : 0,
-            blur : 0,
-            spread : 0
-          },{
-            color : settings.colors['margin'],
-            x : 0.5,
-            y : 0,
-            blur : 0,
-            spread : 0
+            fillType : Document.Style.FillType.Pattern,
+            pattern : {
+              patternType : Document.Style.PatternFillType.Tile,
+              tileScale : 0.25,
+              image : loadLocalImage("/Users/chris.valleskey/Documents/github/intouch-toolkit/intouch-toolkit.sketchplugin/Contents/Resources/shade-" + el.type + ".png"),
+            }
           }
+        ];
+        shape.style.innerShadows = [
+          { color : settings.colors[el.type], x : 1, y : 0, blur : 0, spread : 0 },
+          { color : settings.colors[el.type], x : -1, y : 0, blur : 0, spread : 0 }
         ];
       }
 
@@ -209,9 +256,7 @@ export default function () {
 
     gridGroup.adjustToFit();
 
-    // if(selection.length == 1) {
-    //   gridGroup.x = 100; //(gridGroup.frame.width-selected.frame.width) / 2;
-    // }
+    getWebview(webviewIdentifier).close();
 
   });
 

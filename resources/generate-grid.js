@@ -12,8 +12,10 @@ document.getElementById('button').addEventListener('click', () => {
   window.postMessage('makeGrid', {
     columns : elColumns.options[elColumns.selectedIndex].value,
     breakpoint : elBreakpoint.options[elBreakpoint.selectedIndex].value,
+    gutter : document.getElementById('gutter').checked,
+    gutterSize : document.getElementById('gutterSize').value,
     margin : document.getElementById('margin').checked,
-    outerMargin : document.getElementById('outer-margin').checked,
+    marginSize : document.getElementById('marginSize').value
   });
 })
 

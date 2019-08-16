@@ -24,7 +24,16 @@ var sizes = {
   "xxlarge" : 128
 }
 
+function loadLocalImage(filePath) {
+    if(!NSFileManager.defaultManager().fileExistsAtPath(filePath)) {
+        return null;
+    }
+    return NSImage.alloc().initWithContentsOfFile(filePath);
+}
+
 function makePadding(size) {
+
+
 
   if (selectedLayers.length) {
 
@@ -46,13 +55,14 @@ function makePadding(size) {
         },
         style: {
           fills: [
-            '#45CAF940'
-            //{
-            // fill: 'Pattern',
-            // pattern: {
-            //   patternType: Style.PatternFillType.Fill,
-            //   image: nsimage,
-            // }
+            {
+              fillType : Document.Style.FillType.Pattern,
+              pattern : {
+                patternType : Document.Style.PatternFillType.Tile,
+                tileScale : 0.25,
+                image : loadLocalImage("/Users/chris.valleskey/Documents/github/intouch-toolkit/intouch-toolkit.sketchplugin/Contents/Resources/shade-blue.png"),
+              }
+            }
           ],
           innerShadows: [
             {
@@ -67,7 +77,7 @@ function makePadding(size) {
       });
 
       var maskShape = new Document.ShapePath({
-        parent: shapePath, // todo: test outside of an artboard
+        parent: shapePath,
         frame: {
           x: sizes[size],
           y: sizes[size],
@@ -75,8 +85,9 @@ function makePadding(size) {
           height: layer.frame.height - sizes[size]*2
         }
       });
+      maskShape.sketchObject.resizingConstraint = 18;
 
-      UI.message('Padding ' + size + ' (' + sizes[size] + 'px) added.');
+      //UI.message('Padding ' + size + ' (' + sizes[size] + 'px) added.');
     });
   }
 }

@@ -16,48 +16,54 @@
       }
     },
     {
-      "name": "XSmall",
+      "name": "1 - XSmall (4px)",
       "identifier": "intouch-toolkit.create-padding.xsmall",
+      "shortcut": "control command 1",
       "script": "./create-padding.js",
       "handlers": {
         "run": "paddingXSmall"
       }
     },
     {
-      "name": "Small",
+      "name": "2 - Small (8px)",
       "identifier": "intouch-toolkit.create-padding.small",
+      "shortcut": "control command 2",
       "script": "./create-padding.js",
       "handlers": {
         "run": "paddingSmall"
       }
     },
     {
-      "name": "Medium",
+      "name": "3 - Medium (16px)",
       "identifier": "intouch-toolkit.create-padding.medium",
+      "shortcut": "control command 3",
       "script": "./create-padding.js",
       "handlers": {
         "run": "paddingMedium"
       }
     },
     {
-      "name": "Large",
+      "name": "4 - Large (32px)",
       "identifier": "intouch-toolkit.create-padding.large",
+      "shortcut": "control command 4",
       "script": "./create-padding.js",
       "handlers": {
         "run": "paddingLarge"
       }
     },
     {
-      "name": "XLarge",
+      "name": "5 - XLarge (64px)",
       "identifier": "intouch-toolkit.create-padding.xlarge",
+      "shortcut": "control command 5",
       "script": "./create-padding.js",
       "handlers": {
         "run": "paddingXLarge"
       }
     },
     {
-      "name": "XXLarge",
+      "name": "6 - XXLarge (128px)",
       "identifier": "intouch-toolkit.create-padding.xxlarge",
+      "shortcut": "control command 6",
       "script": "./create-padding.js",
       "handlers": {
         "run": "paddingXXLarge"
