@@ -1,8 +1,17 @@
 {
   "compatibleVersion": "51",
   "bundleVersion": 1,
-  "icon" : "icon.png",
+  "icon": "icon.png",
   "commands": [
+    {
+      "name": "Auto Superscript",
+      "identifier": "intouch-toolkit.auto-superscript",
+      "shortcut": "ctrl command =",
+      "script": "./auto-superscript.js",
+      "handlers": {
+        "run": "autoSuperscript"
+      }
+    },
     {
       "name": "Generate grid...",
       "identifier": "intouch-toolkit.generate-grid",
@@ -86,11 +95,12 @@
   "menu": {
     "title": "Intouch Toolkit",
     "items": [
+      "intouch-toolkit.auto-superscript",
       "intouch-toolkit.generate-grid",
       "intouch-toolkit.export-jpgs-to-pdf",
       {
-        "title" : "Create Padding",
-        "items" : [
+        "title": "Create Padding",
+        "items": [
           "intouch-toolkit.create-padding.xsmall",
           "intouch-toolkit.create-padding.small",
           "intouch-toolkit.create-padding.medium",
