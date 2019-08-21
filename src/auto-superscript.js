@@ -9,7 +9,7 @@ let page = document.selectedPage;
 let settingsAttribute = getSettingsAttributeForKey_Value(kLowerCaseType, kLowerCaseSmallCapsSelector);
 
 var defaults = {
-  "scale" : 0.75
+  "scale" : 0.625
 }
 
 function toggleSuperscript() {
@@ -26,28 +26,70 @@ function applyFontModification(mode) {
 
     let textView = textLayer.sketchObject.editingDelegate().textView()
     let textStorage = textView.textStorage()
+    let selectedRange = textView.selectedRange()
+    let effectiveRange = MOPointer.alloc().init()
 
-    let fonts = getFontsFromTextLayer(textLayer)
+    let font = textLayer.sketchObject.attributedStringValue().attribute_atIndex_longestEffectiveRange_inRange(
+        NSFontAttributeName,
+        0,
+        NSMakeRange(0, 1),
+        selectedRange
+    );
+    //log('attrs: ' + attrString);
 
+    // Need to remove the dependency on getFontsFromTextLayer
+    //let fonts = getFontsFromTextLayer(textLayer)
+    //let font = fonts[0].font;
+
+    log('font: ' + font);
+    log('font.fontDescriptor: ' + font.fontDescriptor());
+
+    //let font = fonts[0].font;
+    let range = selectedRange;
+    let fontSize = textLayer.style.fontSize; // font.pointSize();
+    let descriptor = font.fontDescriptor() //.fontDescriptorByAddingAttributes(settingsAttribute)
     let baseFontSize = textLayer.style.fontSize;
 
-    for(var i = 0; i < fonts.length; i++) {
-        let font = fonts[i].font
-        let range = fonts[i].range
-        let fontSize = font.pointSize();
+    // for(var i = 0; i < fonts.length; i++) {
+    //   log('selection index: ' +fonts[i].range.location);
+    // }
+
+    //for(var i = 0; i < fonts.length; i++) {
 
         //log('fontSize == baseFontSize? ' + (fontSize == baseFontSize));
 
-        let descriptor = font.fontDescriptor() //.fontDescriptorByAddingAttributes(settingsAttribute)
+        //log('textStorage');
+        //log(textStorage.treeAsDictionary().attributes);
 
-        var currentBaselineOffset = textStorage.treeAsDictionary().attributes[1][NSBaselineOffsetAttributeName];
+        // This needs to match the baseline of whatever is selected.
+        // Right now it gets the baselineOffset of the first character.
+        //var currentBaselineOffset = textStorage.treeAsDictionary().attributes[i][NSBaselineOffsetAttributeName];
+
+        var currentBaselineOffset = 0;
+        var selectedIndex = Number(range.location);
+        var textStorageAttributes = textStorage.treeAsDictionary().attributes;
+        for(var i = 0; i < textStorageAttributes.length; i++) {
+          var textStorageIndex = Number(textStorageAttributes[i].location);
+          //log('sel: ' + selectedIndex);
+          //log('loc: ' + textStorageIndex);
+          if(selectedIndex == textStorageIndex) {
+            log('baseline found: ' + textStorageAttributes[i][NSBaselineOffsetAttributeName])
+            if(textStorageAttributes[i][NSBaselineOffsetAttributeName] == null) {
+               currentBaselineOffset = textStorageAttributes[i][NSBaselineOffsetAttributeName];
+            } else {
+              currentBaselineOffset = Number(textStorageAttributes[i][NSBaselineOffsetAttributeName]);
+            }
+            break;
+          }
+        }
+        log('baseline: ' + currentBaselineOffset);
 
         if(currentBaselineOffset == null || currentBaselineOffset == 0) {
 
           if(mode.type == 'superscript') {
-            var baselineOffsetValue = font.pointSize() - (fontSize * defaults.scale);
+            var baselineOffsetValue = Math.floor(fontSize - fontSize * defaults.scale);
           } else if (mode.type == 'subscript') {
-            var baselineOffsetValue = -1 * (font.pointSize() - (fontSize * defaults.scale));
+            var baselineOffsetValue = Math.floor(-1 * (fontSize - fontSize * defaults.scale));
           } else {
             var baselineOffsetValue = 0;
           }
@@ -57,7 +99,7 @@ function applyFontModification(mode) {
           let attrsDict = NSDictionary.dictionaryWithObject_forKey(newFont,NSFontAttributeName)
 
           textStorage.beginEditing();
-          textStorage.addAttributes_range(attrsDict,range);
+          textStorage.addAttributes_range(attrsDict, range);
           textStorage.addAttribute_value_range(NSBaselineOffsetAttributeName, baselineOffsetValue, range);
           textStorage.endEditing();
 
@@ -69,14 +111,14 @@ function applyFontModification(mode) {
           let attrsDict = NSDictionary.dictionaryWithObject_forKey(newFont,NSFontAttributeName)
 
           textStorage.beginEditing();
-          textStorage.addAttributes_range(attrsDict,range)
+          textStorage.addAttributes_range(attrsDict, range)
           textStorage.addAttribute_value_range(NSBaselineOffsetAttributeName, baselineOffsetValue, range);
           textStorage.endEditing();
 
         }
 
         textStorage.fixAttributesInRange(range)
-    }
+    //}
     textView.didChangeText()
     document.sketchObject.reloadInspector()
 }
@@ -126,6 +168,8 @@ function getFontsFromTextLayer(textLayer) {
         fonts.push({"font": font, "range": effectiveRange.value()})
     }
 
+    // The problem with this is it isn't reading the live value of the text.
+    // Need to get the live attributedStringValue to then run
     while (selectedRange.length > 0) {
         let font = attributedString.attribute_atIndex_longestEffectiveRange_inRange(
             NSFontAttributeName,
