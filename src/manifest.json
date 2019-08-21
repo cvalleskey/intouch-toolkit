@@ -4,7 +4,7 @@
   "icon": "icon.png",
   "commands": [
     {
-      "name": "Auto Superscript",
+      "name": "Toggle Superscript",
       "identifier": "intouch-toolkit.auto-superscript",
       "shortcut": "ctrl command =",
       "script": "./auto-superscript.js",
@@ -12,10 +12,19 @@
         "run": "autoSuperscript"
       }
     },
+      {
+        "name": "Toggle Subscript",
+        "identifier": "intouch-toolkit.auto-subscript",
+        "shortcut": "ctrl command -",
+        "script": "./auto-superscript.js",
+        "handlers": {
+          "run": "autoSubscript"
+        }
+      },
     {
       "name": "Generate grid...",
       "identifier": "intouch-toolkit.generate-grid",
-      "shortcut": "command option shift g",
+      "shortcut": "ctrl command g",
       "script": "./generate-grid.js",
       "handlers": {
         "run": "onRun",
@@ -95,9 +104,16 @@
   "menu": {
     "title": "Intouch Toolkit",
     "items": [
-      "intouch-toolkit.auto-superscript",
+      {
+        "title": "Typography",
+        "items": [
+          "intouch-toolkit.auto-superscript",
+          "intouch-toolkit.auto-subscript"
+        ]
+      },
+      "-",
       "intouch-toolkit.generate-grid",
-      "intouch-toolkit.export-jpgs-to-pdf",
+
       {
         "title": "Create Padding",
         "items": [
@@ -108,7 +124,9 @@
           "intouch-toolkit.create-padding.xlarge",
           "intouch-toolkit.create-padding.xxlarge"
         ]
-      }
+      },
+      "-",
+      "intouch-toolkit.export-jpgs-to-pdf"
     ]
   },
   "description": "Productivity tools for use in project work"

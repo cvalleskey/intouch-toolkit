@@ -1,4 +1,6 @@
-import UI from 'sketch/ui'
+//framework("CoreText");
+
+import UI from 'sketch/ui';
 import Document from 'sketch/dom';
 
 var document = Document.getSelectedDocument();
@@ -11,13 +13,14 @@ var defaults = {
 }
 
 function toggleSuperscript() {
-
-    applySuperscriptFontModification();
-
-    // UI.message('Substring attributes.');
+  applyFontModification({ type: 'superscript' });
 }
 
-function applySubstringFontModification() {
+function toggleSubscript() {
+  applyFontModification({ type: 'subscript' });
+}
+
+function applyFontModification(mode) {
 
     let textLayer = document.selectedLayers.layers[0]
 
@@ -25,53 +28,57 @@ function applySubstringFontModification() {
     let textStorage = textView.textStorage()
 
     let fonts = getFontsFromTextLayer(textLayer)
-    fonts.forEach(fontForRange => {
-        let font = fontForRange.font
-        let range = fontForRange.range
-        let fontSize = font.pointSize()
 
-        let descriptor = font
-            .fontDescriptor()
-            .fontDescriptorByAddingAttributes(settingsAttribute)
+    let baseFontSize = textLayer.style.fontSize;
 
-        let newFont = NSFont.fontWithDescriptor_size(descriptor,fontSize)
-        let attrsDict = NSDictionary.dictionaryWithObject_forKey(newFont,NSFontAttributeName)
-        textStorage.addAttributes_range(attrsDict,range)
+    for(var i = 0; i < fonts.length; i++) {
+        let font = fonts[i].font
+        let range = fonts[i].range
+        let fontSize = font.pointSize();
+
+        //log('fontSize == baseFontSize? ' + (fontSize == baseFontSize));
+
+        let descriptor = font.fontDescriptor() //.fontDescriptorByAddingAttributes(settingsAttribute)
+
+        var currentBaselineOffset = textStorage.treeAsDictionary().attributes[1][NSBaselineOffsetAttributeName];
+
+        if(currentBaselineOffset == null || currentBaselineOffset == 0) {
+
+          if(mode.type == 'superscript') {
+            var baselineOffsetValue = font.pointSize() - (fontSize * defaults.scale);
+          } else if (mode.type == 'subscript') {
+            var baselineOffsetValue = -1 * (font.pointSize() - (fontSize * defaults.scale));
+          } else {
+            var baselineOffsetValue = 0;
+          }
+
+          let descriptor = font.fontDescriptor() //.fontDescriptorByAddingAttributes(settingsAttribute)
+          let newFont = NSFont.fontWithDescriptor_size(descriptor, fontSize * defaults.scale)
+          let attrsDict = NSDictionary.dictionaryWithObject_forKey(newFont,NSFontAttributeName)
+
+          textStorage.beginEditing();
+          textStorage.addAttributes_range(attrsDict,range);
+          textStorage.addAttribute_value_range(NSBaselineOffsetAttributeName, baselineOffsetValue, range);
+          textStorage.endEditing();
+
+        } else {
+
+          let baselineOffsetValue = 0;
+          let descriptor = font.fontDescriptor() //.fontDescriptorByAddingAttributes(settingsAttribute)
+          let newFont = NSFont.fontWithDescriptor_size(descriptor,fontSize)
+          let attrsDict = NSDictionary.dictionaryWithObject_forKey(newFont,NSFontAttributeName)
+
+          textStorage.beginEditing();
+          textStorage.addAttributes_range(attrsDict,range)
+          textStorage.addAttribute_value_range(NSBaselineOffsetAttributeName, baselineOffsetValue, range);
+          textStorage.endEditing();
+
+        }
+
         textStorage.fixAttributesInRange(range)
-    })
+    }
     textView.didChangeText()
-}
-
-function applySuperscriptFontModification() {
-
-    let textLayer = document.selectedLayers.layers[0]
-
-    let textView = textLayer.sketchObject.editingDelegate().textView()
-    let textStorage = textView.textStorage()
-
-    let fonts = getFontsFromTextLayer(textLayer)
-    fonts.forEach(fontForRange => {
-        let font = fontForRange.font
-        let range = fontForRange.range
-        let fontSize = font.pointSize() * defaults.scale;
-
-        //log('fontSize before: ' + font.pointSize());
-        //log('fontSize after: ' + fontSize);
-
-        log(textStorage);
-
-        let descriptor = font
-            .fontDescriptor()
-            //.fontDescriptorByAddingAttributes(settingsAttribute)
-
-
-        let newFont = NSFont.fontWithDescriptor_size(descriptor,fontSize)
-        let attrsDict = NSDictionary.dictionaryWithObject_forKey(newFont,NSFontAttributeName)
-        textStorage.addAttributes_range(attrsDict,range)
-        //textStorage.NSBaselineOffset = 12.0;
-        textStorage.fixAttributesInRange(range)
-    })
-    textView.didChangeText()
+    document.sketchObject.reloadInspector()
 }
 
 function getFontAttributesForSelectedRange() {
@@ -137,3 +144,4 @@ function getFontsFromTextLayer(textLayer) {
 }
 
 export function autoSuperscript() { toggleSuperscript(); }
+export function autoSubscript() { toggleSubscript(); }

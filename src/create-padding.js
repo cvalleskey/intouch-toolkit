@@ -89,6 +89,8 @@ function makePadding(size) {
 
       //UI.message('Padding ' + size + ' (' + sizes[size] + 'px) added.');
     });
+  } else {
+    UI.message('Select an object to create padding.');
   }
 }
 

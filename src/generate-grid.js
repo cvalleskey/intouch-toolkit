@@ -54,6 +54,12 @@ export default function () {
     var selection = document.selectedLayers;
     var selected = (selection.length == 1)? selection.layers[0] : false;
 
+    if(!selected) {
+      getWebview(webviewIdentifier).close();
+      UI.message('Select a layer or artboard to generate a grid.');
+      return;
+    }
+
     var columns = s.columns;
     var gutter = Number(s.gutter);
     var gutterSize = s.gutterSize.includes("%")? s.gutterSize : Number(s.gutterSize);
@@ -100,20 +106,8 @@ export default function () {
       pixelGutterSize = 0;
     }
 
-    //UI.message('pixelGutterSize: ' + pixelGutterSize);
-
     // Calculate single column width
     let pixelColumnWidth = Number(((containerFinalWidth - (pixelGutterSize)*(settings.columnCount-1)) / settings.columnCount).toFixed(2));
-
-    // if(typeof gutterSize == "number") {
-    //   let mWidth = containerFinalWidth * (pixelMarginSize * margin);
-    // } else {
-    //   let percentWidth = gutterSize.replace("%", "") / 100;
-    //   let mWidth = containerFinalWidth * (percentWidth * margin);
-    // }
-
-    //let mWidth = containerFinalWidth * (marginSize * margin);
-
 
     var columnsArray = [];
 
