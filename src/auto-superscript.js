@@ -32,94 +32,47 @@ function applyFontModification(mode) {
         NSMakeRange(0, 1),
         selectedRange
     );
-    //log('attrs: ' + attrString);
 
-    // Need to remove the dependency on getFontsFromTextLayer
-    //let fonts = getFontsFromTextLayer(textLayer)
-    //let font = fonts[0].font;
-
-    //log('font: ' + font);
-    //log('font.fontDescriptor: ' + font.fontDescriptor());
-
-    //let font = fonts[0].font;
     let range = selectedRange;
-    let fontSize = textLayer.style.fontSize; // font.pointSize();
-    let descriptor = font.fontDescriptor() //.fontDescriptorByAddingAttributes(settingsAttribute)
+    let fontSize = textLayer.style.fontSize;
+    let newFontSize = fontSize * settings.scale;
+    let descriptor = font.fontDescriptor();
     let baseFontSize = textLayer.style.fontSize;
 
-    // for(var i = 0; i < fonts.length; i++) {
-    //   log('selection index: ' +fonts[i].range.location);
-    // }
+    var currentBaselineOffset = 0;
+    var selectedIndex = Number(range.location);
+    var textStorageAttributes = textStorage.treeAsDictionary().attributes;
 
-    //for(var i = 0; i < fonts.length; i++) {
+    for(var i = 0; i < textStorageAttributes.length; i++) {
+      var textStorageIndex = Number(textStorageAttributes[i].location);
 
-        //log('fontSize == baseFontSize? ' + (fontSize == baseFontSize));
-
-        //log('textStorage');
-        //log(textStorage.treeAsDictionary().attributes);
-
-        // This needs to match the baseline of whatever is selected.
-        // Right now it gets the baselineOffset of the first character.
-        //var currentBaselineOffset = textStorage.treeAsDictionary().attributes[i][NSBaselineOffsetAttributeName];
-
-        var currentBaselineOffset = 0;
-        var selectedIndex = Number(range.location);
-        var textStorageAttributes = textStorage.treeAsDictionary().attributes;
-        for(var i = 0; i < textStorageAttributes.length; i++) {
-          var textStorageIndex = Number(textStorageAttributes[i].location);
-          //log('sel: ' + selectedIndex);
-          //log('loc: ' + textStorageIndex);
-          if(selectedIndex == textStorageIndex) {
-            //log('baseline found: ' + textStorageAttributes[i][NSBaselineOffsetAttributeName])
-            if(textStorageAttributes[i][NSBaselineOffsetAttributeName] == null) {
-               currentBaselineOffset = textStorageAttributes[i][NSBaselineOffsetAttributeName];
-            } else {
-              currentBaselineOffset = Number(textStorageAttributes[i][NSBaselineOffsetAttributeName]);
-            }
-            break;
-          }
-        }
-        //log('baseline: ' + currentBaselineOffset);
-
-        if(currentBaselineOffset == null || currentBaselineOffset == 0) {
-
-          if(mode.type == 'superscript') {
-            var baselineOffsetValue = Math.floor(fontSize - fontSize * settings.scale);
-          } else if (mode.type == 'subscript') {
-            var baselineOffsetValue = Math.floor((-0.375) * (fontSize - fontSize * settings.scale));
-          } else {
-            var baselineOffsetValue = 0;
-          }
-
-          var baselineOffsetValue = getBaselineOffsetValue(mode.type, fontSize, settings.scale);
-
-          let descriptor = font.fontDescriptor() //.fontDescriptorByAddingAttributes(settingsAttribute)
-          let newFont = NSFont.fontWithDescriptor_size(descriptor, fontSize * settings.scale)
-          let attrsDict = NSDictionary.dictionaryWithObject_forKey(newFont,NSFontAttributeName)
-
-          textStorage.beginEditing();
-          textStorage.addAttributes_range(attrsDict, range);
-          textStorage.addAttribute_value_range(NSBaselineOffsetAttributeName, baselineOffsetValue, range);
-          textStorage.endEditing();
-
+      if(selectedIndex == textStorageIndex) {
+        if(textStorageAttributes[i][NSBaselineOffsetAttributeName] == null) {
+           currentBaselineOffset = 0;
         } else {
-
-          let baselineOffsetValue = 0;
-          let descriptor = font.fontDescriptor() //.fontDescriptorByAddingAttributes(settingsAttribute)
-          let newFont = NSFont.fontWithDescriptor_size(descriptor,fontSize)
-          let attrsDict = NSDictionary.dictionaryWithObject_forKey(newFont,NSFontAttributeName)
-
-          textStorage.beginEditing();
-          textStorage.addAttributes_range(attrsDict, range)
-          textStorage.addAttribute_value_range(NSBaselineOffsetAttributeName, baselineOffsetValue, range);
-          textStorage.endEditing();
-
+          currentBaselineOffset = Number(textStorageAttributes[i][NSBaselineOffsetAttributeName]);
         }
+        break;
+      }
+    }
 
-        textStorage.fixAttributesInRange(range)
-    //}
-    textView.didChangeText()
-    document.sketchObject.reloadInspector()
+    var baselineOffsetValue = getBaselineOffsetValue(mode.type, fontSize, settings.scale);
+    if((mode.type == 'superscript' && currentBaselineOffset > 0) || (mode.type == 'subscript' && currentBaselineOffset < 0)) {
+      baselineOffsetValue = 0;
+      newFontSize = fontSize;
+    }
+
+    let newFont = NSFont.fontWithDescriptor_size(descriptor, newFontSize)
+    let attrsDict = NSDictionary.dictionaryWithObject_forKey(newFont,NSFontAttributeName)
+
+    textStorage.beginEditing();
+    textStorage.addAttributes_range(attrsDict, range);
+    textStorage.addAttribute_value_range(NSBaselineOffsetAttributeName, baselineOffsetValue, range);
+    textStorage.endEditing();
+
+    textStorage.fixAttributesInRange(range);
+    textView.didChangeText();
+    document.sketchObject.reloadInspector();
 }
 
 function getFontAttributesForSelectedRange() {
