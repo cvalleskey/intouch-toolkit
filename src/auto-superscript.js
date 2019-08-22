@@ -1,5 +1,3 @@
-//framework("CoreText");
-
 import UI from 'sketch/ui';
 import Document from 'sketch/dom';
 
@@ -7,7 +5,7 @@ var document = Document.getSelectedDocument();
 var selectedLayers = document.selectedLayers;
 let page = document.selectedPage;
 
-var defaults = {
+var settings = {
   "scale" : 0.625
 }
 
@@ -86,15 +84,15 @@ function applyFontModification(mode) {
         if(currentBaselineOffset == null || currentBaselineOffset == 0) {
 
           if(mode.type == 'superscript') {
-            var baselineOffsetValue = Math.floor(fontSize - fontSize * defaults.scale);
+            var baselineOffsetValue = Math.floor(fontSize - fontSize * settings.scale);
           } else if (mode.type == 'subscript') {
-            var baselineOffsetValue = Math.floor(-1 * (fontSize - fontSize * defaults.scale));
+            var baselineOffsetValue = Math.floor((-0.375) * (fontSize - fontSize * settings.scale));
           } else {
             var baselineOffsetValue = 0;
           }
 
           let descriptor = font.fontDescriptor() //.fontDescriptorByAddingAttributes(settingsAttribute)
-          let newFont = NSFont.fontWithDescriptor_size(descriptor, fontSize * defaults.scale)
+          let newFont = NSFont.fontWithDescriptor_size(descriptor, fontSize * settings.scale)
           let attrsDict = NSDictionary.dictionaryWithObject_forKey(newFont,NSFontAttributeName)
 
           textStorage.beginEditing();
@@ -120,8 +118,6 @@ function applyFontModification(mode) {
     //}
     textView.didChangeText()
     document.sketchObject.reloadInspector()
-
-    getBaselineOffsetTexts();
 }
 
 function getFontAttributesForSelectedRange() {
@@ -186,56 +182,6 @@ function getFontsFromTextLayer(textLayer) {
         fonts.push({"font": font, "range": effectiveRange.value()})
     }
     return fonts
-}
-
-function getBaselineOffsetTexts() {
-
-  var textStyles = [];
-
-  document.pages.forEach(function(page){
-    page.layers.forEach(processLayer);
-  })
-
-  console.log(textStyles);
-
-  function processLayer(layer){
-    if(layer.type == 'Text'){
-
-      let textView = layer.sketchObject.attributedStringValue().treeAsDictionary();
-      textView.attributes.forEach(function(attr){
-
-        var baselineOffset = attr['NSBaselineOffset'];
-        if(baselineOffset != null && baselineOffset != 0) {
-          textStyles.push({
-            id : layer.id,
-            baselineOffset : baselineOffset,
-            location : attr['location'],
-            length : attr['length'],
-            text : attr['text']
-          });
-        }
-      });
-      //log('textView: ' + layer.sketchObject.attributedStringValue());
-      //let textStorage = textView.textStorage();
-      //var textStorageAttributes = textStorage.treeAsDictionary().attributes;
-
-      // for(var i = 0; i < textStorageAttributes.length; i++) {
-      //   textStyles.push({
-      //     'baselineOffset' : textStorageAttributes[i][NSBaselineOffsetAttributeName]
-      //   });
-      // }
-
-
-      // textStyles.push({
-      //   font: layer.style.fontFamily,
-      //   size: layer.style.fontSize,
-      //   color: layer.style.textColor // etc...
-      // });
-    }
-    if(layer.layers){
-      layer.layers.forEach(processLayer);
-    }
-  }
 }
 
 export function autoSuperscript() { toggleSuperscript(); }

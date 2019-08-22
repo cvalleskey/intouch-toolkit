@@ -15,15 +15,24 @@
         }
       }
     },
-      {
-        "name": "Toggle Subscript",
-        "identifier": "intouch-toolkit.auto-subscript",
-        "shortcut": "ctrl command -",
-        "script": "./auto-superscript.js",
-        "handlers": {
-          "run": "autoSubscript"
-        }
-      },
+    {
+      "name": "Toggle Subscript",
+      "identifier": "intouch-toolkit.auto-subscript",
+      "shortcut": "ctrl command -",
+      "script": "./auto-superscript.js",
+      "handlers": {
+        "run": "autoSubscript"
+      }
+    },
+    {
+      "name": "Update Text Style",
+      "identifier": "intouch-toolkit.update-formatted-text-style",
+      "shortcut": "ctrl command s",
+      "script": "./update-formatted-text-style.js",
+      "handlers": {
+        "run": "updateFormattedTextStyle"
+      }
+    },
     {
       "name": "Generate grid...",
       "identifier": "intouch-toolkit.generate-grid",
@@ -111,7 +120,9 @@
         "title": "Typography",
         "items": [
           "intouch-toolkit.auto-superscript",
-          "intouch-toolkit.auto-subscript"
+          "intouch-toolkit.auto-subscript",
+          "-",
+          "intouch-toolkit.update-formatted-text-style"
         ]
       },
       "-",
