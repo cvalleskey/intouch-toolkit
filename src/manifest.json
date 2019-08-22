@@ -9,7 +9,10 @@
       "shortcut": "ctrl command =",
       "script": "./auto-superscript.js",
       "handlers": {
-        "run": "autoSuperscript"
+        "run": "autoSuperscript",
+        "actions": {
+          "*": "onTextStyleUpdateBegin"
+        }
       }
     },
       {

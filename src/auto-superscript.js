@@ -41,8 +41,8 @@ function applyFontModification(mode) {
     //let fonts = getFontsFromTextLayer(textLayer)
     //let font = fonts[0].font;
 
-    log('font: ' + font);
-    log('font.fontDescriptor: ' + font.fontDescriptor());
+    //log('font: ' + font);
+    //log('font.fontDescriptor: ' + font.fontDescriptor());
 
     //let font = fonts[0].font;
     let range = selectedRange;
@@ -73,7 +73,7 @@ function applyFontModification(mode) {
           //log('sel: ' + selectedIndex);
           //log('loc: ' + textStorageIndex);
           if(selectedIndex == textStorageIndex) {
-            log('baseline found: ' + textStorageAttributes[i][NSBaselineOffsetAttributeName])
+            //log('baseline found: ' + textStorageAttributes[i][NSBaselineOffsetAttributeName])
             if(textStorageAttributes[i][NSBaselineOffsetAttributeName] == null) {
                currentBaselineOffset = textStorageAttributes[i][NSBaselineOffsetAttributeName];
             } else {
@@ -82,7 +82,7 @@ function applyFontModification(mode) {
             break;
           }
         }
-        log('baseline: ' + currentBaselineOffset);
+        //log('baseline: ' + currentBaselineOffset);
 
         if(currentBaselineOffset == null || currentBaselineOffset == 0) {
 
@@ -121,6 +121,8 @@ function applyFontModification(mode) {
     //}
     textView.didChangeText()
     document.sketchObject.reloadInspector()
+
+    getBaselineOffsetTexts();
 }
 
 function getFontAttributesForSelectedRange() {
@@ -187,5 +189,63 @@ function getFontsFromTextLayer(textLayer) {
     return fonts
 }
 
+function getBaselineOffsetTexts() {
+
+  var textStyles = [];
+
+  document.pages.forEach(function(page){
+    page.layers.forEach(processLayer);
+  })
+
+  console.log(textStyles);
+
+  function processLayer(layer){
+    if(layer.type == 'Text'){
+
+      let textView = layer.sketchObject.attributedStringValue().treeAsDictionary();
+      textView.attributes.forEach(function(attr){
+
+        var baselineOffset = attr['NSBaselineOffset'];
+        if(baselineOffset != null && baselineOffset != 0) {
+          textStyles.push({
+            id : layer.id,
+            baselineOffset : baselineOffset,
+            location : attr['location'],
+            length : attr['length'],
+            text : attr['text']
+          });
+        }
+      });
+      //log('textView: ' + layer.sketchObject.attributedStringValue());
+      //let textStorage = textView.textStorage();
+      //var textStorageAttributes = textStorage.treeAsDictionary().attributes;
+
+      // for(var i = 0; i < textStorageAttributes.length; i++) {
+      //   textStyles.push({
+      //     'baselineOffset' : textStorageAttributes[i][NSBaselineOffsetAttributeName]
+      //   });
+      // }
+
+
+      // textStyles.push({
+      //   font: layer.style.fontFamily,
+      //   size: layer.style.fontSize,
+      //   color: layer.style.textColor // etc...
+      // });
+    }
+    if(layer.layers){
+      layer.layers.forEach(processLayer);
+    }
+  }
+}
+
 export function autoSuperscript() { toggleSuperscript(); }
 export function autoSubscript() { toggleSubscript(); }
+
+export function onTextStyleUpdateBegin(context) {
+  log("onTextStyleUpdateBegin");
+}
+
+export function onTextStyleUpdateFinish(context) {
+  log("onTextStyleUpdateFinish");
+}
