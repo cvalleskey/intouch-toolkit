@@ -30,6 +30,10 @@ export default function () {
       gutter : '#F32C3A',
       margin : '#456BF9'
     },
+    patterns : {
+      gutter : "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAASklEQVR4AWL4rGuT/V/PjZuBjgBkH8jezzpWgPbmwAKAKIqB4Cv9Sj/5TSxMIBbMdyW+vxJfw+FwOBwOh8Ph8BaHw7cSf16Jz/0B8zwMcB35KKgAAAAASUVORK5CYII=",
+      margin: "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAASUlEQVR4AWJwz/6R7VbynxvQ/hwaARDDMBB0wV/Etx2WsXmoRfaI4I5qsfbG/c5fSby3kvjqeTgcDofD4XA4HA6HP0vi4yXxdi8xLzuw8dlqTgAAAABJRU5ErkJggg=="
+    },
     columnCount: 12
   }
 
@@ -235,7 +239,8 @@ export default function () {
             pattern : {
               patternType : Document.Style.PatternFillType.Tile,
               tileScale : 0.25,
-              image : loadLocalImage("/Users/chris.valleskey/Documents/github/intouch-toolkit/intouch-toolkit.sketchplugin/Contents/Resources/shade-" + el.type + ".png"),
+              image : { "base64": settings.patterns[el.type]}
+              //image : loadLocalImage("/Users/chris.valleskey/Documents/github/intouch-toolkit/intouch-toolkit.sketchplugin/Contents/Resources/shade-" + el.type + ".png"),
             }
           }
         ];

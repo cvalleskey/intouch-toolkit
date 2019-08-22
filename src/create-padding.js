@@ -13,15 +13,18 @@ let page = document.selectedPage;
 
 //UI.message('nsimage: ' + Document.plugin.urlForResourceNamed("shade-blue.png").path());
 
-var sizes = {
-  "thin" : 1,
-  "thick" : 2,
-  "xsmall" : 4,
-  "small" : 8,
-  "medium" : 16,
-  "large" : 32,
-  "xlarge" : 64,
-  "xxlarge" : 128
+var settings = {
+  pattern : "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAASklEQVR4AWJwO/Ury+3if24GOgKQfSB7XU7/BLQ3BxYARFEMBF/n1/rJb2JhArFgvivx/ZX4Gg6Hw+FwOBwOh7c4HL6V+PNKfO4PEdd2MBzwoFMAAAAASUVORK5CYII=",
+  sizes: {
+    "thin" : 1,
+    "thick" : 2,
+    "xsmall" : 4,
+    "small" : 8,
+    "medium" : 16,
+    "large" : 32,
+    "xlarge" : 64,
+    "xxlarge" : 128
+  }
 }
 
 function loadLocalImage(filePath) {
@@ -60,7 +63,8 @@ function makePadding(size) {
               pattern : {
                 patternType : Document.Style.PatternFillType.Tile,
                 tileScale : 0.25,
-                image : loadLocalImage("/Users/chris.valleskey/Documents/github/intouch-toolkit/intouch-toolkit.sketchplugin/Contents/Resources/shade-blue.png"),
+                //image : loadLocalImage("/Users/chris.valleskey/Documents/github/intouch-toolkit/intouch-toolkit.sketchplugin/Contents/Resources/shade-blue.png"),
+                image : { "base64": settings.pattern }
               }
             }
           ],
@@ -79,15 +83,15 @@ function makePadding(size) {
       var maskShape = new Document.ShapePath({
         parent: shapePath,
         frame: {
-          x: sizes[size],
-          y: sizes[size],
-          width: layer.frame.width - sizes[size]*2,
-          height: layer.frame.height - sizes[size]*2
+          x: settings.sizes[size],
+          y: settings.sizes[size],
+          width: layer.frame.width - settings.sizes[size]*2,
+          height: layer.frame.height - settings.sizes[size]*2
         }
       });
       maskShape.sketchObject.resizingConstraint = 18;
 
-      //UI.message('Padding ' + size + ' (' + sizes[size] + 'px) added.');
+      //UI.message('Padding ' + size + ' (' + settings.sizes[size] + 'px) added.');
     });
   } else {
     UI.message('Select an object to create padding.');

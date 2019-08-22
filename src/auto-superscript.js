@@ -6,7 +6,6 @@ import Document from 'sketch/dom';
 var document = Document.getSelectedDocument();
 var selectedLayers = document.selectedLayers;
 let page = document.selectedPage;
-let settingsAttribute = getSettingsAttributeForKey_Value(kLowerCaseType, kLowerCaseSmallCapsSelector);
 
 var defaults = {
   "scale" : 0.625
