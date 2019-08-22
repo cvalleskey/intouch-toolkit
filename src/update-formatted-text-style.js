@@ -18,7 +18,12 @@ export function updateFormattedTextStyle() {
     var formattedLayers = getSharedStyleLayersById(textLayer.sharedStyleId);
 
     // Update Shared Text Style with new properties
+    sharedStyle.style.fontFamily = textLayer.style.fontFamily;
+    sharedStyle.style.fontWeight = textLayer.style.fontWeight;
     sharedStyle.style.fontSize = textLayer.style.fontSize;
+    sharedStyle.style.fontStyle = textLayer.style.fontStyle;
+    sharedStyle.style.fontVariant = textLayer.style.fontVariant;
+    sharedStyle.style.textColor = textLayer.style.textColor;
 
     for (var i = 0; i < formattedLayers.length; i++) {
       var layer = formattedLayers[i].layer;
@@ -47,35 +52,36 @@ function getSharedStyleLayersById(sharedStyleId) {
 
   for (var i = 0; i < sharedTextStyles.length; i++) {
     if (sharedTextStyles[i].id == sharedStyleId) {
-      //log(sharedTextStyles[i].name);
 
       var instances = sharedTextStyles[i].getAllInstancesLayers();
-
-      //log('instances: ' + instances);
 
       var baselineOffsetTextLayers = [];
 
       for (var z = 0; z < instances.length; z++) {
         var layer = instances[z];
 
-        let textView = layer.sketchObject
-          .attributedStringValue()
-          .treeAsDictionary();
+        let textView = layer.sketchObject.attributedStringValue().treeAsDictionary();
+
+        var textViewObj = {
+          layer: layer,
+          //id: layer.id,
+          baselineOffsets: []
+        }
 
         textView.attributes.forEach(function(attr) {
           var baselineOffset = attr["NSBaselineOffset"];
           if (baselineOffset != null && baselineOffset != 0) {
-            baselineOffsetTextLayers.push({
-              layer: layer,
-              id: layer.id,
-              baselineOffset: baselineOffset,
+
+            textViewObj.baselineOffsets.push({
+              //baselineOffset: baselineOffset,
               type: baselineOffset < 0 ? "subscript" : "superscript",
               location: attr["location"],
               length: attr["length"],
-              text: attr["text"]
+              //text: attr["text"]
             });
           }
         });
+        baselineOffsetTextLayers.push(textViewObj);
       }
 
       return baselineOffsetTextLayers;
@@ -90,53 +96,25 @@ function applyBaselineOffset(obj) {
 
   let fontSize = layer.style.fontSize;
   let baseFont = object.font();
-  //let boldFont = NSFontManager.sharedFontManager().convertFont_toHaveTrai(baseFont, NSBoldFontMask);
 
-  // let font = object
-  //   .attributedStringValue()
-  //   .attribute_atIndex_longestEffectiveRange_inRange(
-  //     NSFontAttributeName,
-  //     0,
-  //     NSMakeRange(0, 1),
-  //     NSMakeRange(0, 1)
-  //   );
-  //
-  //   log(baseFont)
 
-  // let descriptor = font.fontDescriptor(); //.fontDescriptorByAddingAttributes(settingsAttribute)
-  // let newFont = NSFont.fontWithDescriptor_size(
-  //   descriptor,
-  //   fontSize * settings.scale
-  // );
-  // let attrsDict = NSDictionary.dictionaryWithObject_forKey(
-  //   newFont,
-  //   NSFontAttributeName
-  // );
+  obj.baselineOffsets.forEach(function(baselineOffset) {
 
-  if (obj.type == "superscript") {
-    var baselineOffsetValue = Math.floor(fontSize - fontSize * settings.scale);
-  } else if (obj.type == "subscript") {
-    var baselineOffsetValue = Math.floor(-0.375 * (fontSize - fontSize * settings.scale));
+    var range = NSMakeRange(baselineOffset.location, baselineOffset.length);
+
+    var baselineOffsetValue = getBaselineOffsetValue(baselineOffset.type, fontSize, settings.scale);
+    let smallerFont = NSFontManager.sharedFontManager().convertFont_toSize(baseFont, fontSize * settings.scale);
+
+    object.addAttribute_value_forRange(NSFontAttributeName, smallerFont, range);
+    object.addAttribute_value_forRange(NSBaselineOffsetAttributeName, baselineOffsetValue, range);
+  });
+
+}
+
+function getBaselineOffsetValue(type, fontSize, scale) {
+  if (type == "superscript") {
+    return Math.floor(fontSize - fontSize * scale);
+  } else if (type == "subscript") {
+    return Math.floor(-0.375 * (fontSize - fontSize * scale));
   }
-  let smallerFont = NSFontManager.sharedFontManager().convertFont_toSize(baseFont, fontSize * settings.scale);
-
-  var range = NSMakeRange(obj.location, obj.length);
-  //log('range: ' + obj.location + ', ' + obj.length);
-
-  object.addAttribute_value_forRange(NSFontAttributeName, smallerFont, range);
-  object.addAttribute_value_forRange(NSBaselineOffsetAttributeName, baselineOffsetValue, range);
-  //log(object.attributeForKey(NSBaselineOffsetAttributeName));
-
-  // object.addAttribute_value_range(
-  //   NSBaselineOffsetAttributeName,
-  //   baselineOffsetValue,
-  //   range
-  // );
-
-  //object.addAttribute_value_range(NSBaselineOffsetAttributeName, baselineOffsetValue, range);
-
-  //textStorage.beginEditing();
-  //textStorage.addAttributes_range(attrsDict, range);
-  //textStorage.addAttribute_value_range(NSBaselineOffsetAttributeName, baselineOffsetValue, range);
-  //textStorage.endEditing();
 }

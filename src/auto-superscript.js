@@ -91,6 +91,8 @@ function applyFontModification(mode) {
             var baselineOffsetValue = 0;
           }
 
+          var baselineOffsetValue = getBaselineOffsetValue(mode.type, fontSize, settings.scale);
+
           let descriptor = font.fontDescriptor() //.fontDescriptorByAddingAttributes(settingsAttribute)
           let newFont = NSFont.fontWithDescriptor_size(descriptor, fontSize * settings.scale)
           let attrsDict = NSDictionary.dictionaryWithObject_forKey(newFont,NSFontAttributeName)
@@ -182,6 +184,14 @@ function getFontsFromTextLayer(textLayer) {
         fonts.push({"font": font, "range": effectiveRange.value()})
     }
     return fonts
+}
+
+function getBaselineOffsetValue(type, fontSize, scale) {
+  if (type == "superscript") {
+    return Math.floor(fontSize - fontSize * scale);
+  } else if (type == "subscript") {
+    return Math.floor(-0.375 * (fontSize - fontSize * scale));
+  }
 }
 
 export function autoSuperscript() { toggleSuperscript(); }
