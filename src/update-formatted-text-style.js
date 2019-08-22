@@ -14,8 +14,6 @@ export function updateFormattedTextStyle() {
   let sharedStyle = getSharedStyleById(textLayer.sharedStyleId);
 
   if (sharedStyle) {
-    // Get all layers which use the Shared Text Style
-    var formattedLayers = getSharedStyleLayersById(textLayer.sharedStyleId);
 
     // Update Shared Text Style with new properties
     sharedStyle.style.fontFamily = textLayer.style.fontFamily;
@@ -24,7 +22,22 @@ export function updateFormattedTextStyle() {
     sharedStyle.style.fontStyle = textLayer.style.fontStyle;
     sharedStyle.style.fontVariant = textLayer.style.fontVariant;
     sharedStyle.style.textColor = textLayer.style.textColor;
+    sharedStyle.style.lineHeight = textLayer.style.lineHeight;
+    sharedStyle.style.paragraphSpacing = textLayer.style.paragraphSpacing;
 
+    // Get all layers which use the Shared Text Style
+    var formattedLayers = getSharedStyleLayersById(textLayer.sharedStyleId);
+
+    // Update all text layers that use this shared style
+    var allLayersWithSharedStyle = getAllLayersWithSharedStyle(sharedStyle);
+    for(var i = 0; i < allLayersWithSharedStyle.length; i++) {
+      var layer = allLayersWithSharedStyle[i];
+
+      // Apply new shared style to all formatted layers and apply formatting
+      layer.style.syncWithSharedStyle(sharedStyle);
+    }
+
+    // Update text styles with formatting saved
     for (var i = 0; i < formattedLayers.length; i++) {
       var layer = formattedLayers[i].layer;
 
@@ -45,6 +58,15 @@ function getSharedStyleById(sharedStyleId) {
     }
   }
   return false;
+}
+
+function getAllLayersWithSharedStyle(sharedStyle) {
+  var sharedTextStyles = document.sharedTextStyles;
+  for (var i = 0; i < sharedTextStyles.length; i++) {
+    if (sharedTextStyles[i].id == sharedStyle.id) {
+      return sharedTextStyles[i].getAllInstancesLayers();
+    }
+  }
 }
 
 function getSharedStyleLayersById(sharedStyleId) {
