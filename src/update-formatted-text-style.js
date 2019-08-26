@@ -16,14 +16,7 @@ export function updateFormattedTextStyle() {
   if (sharedStyle) {
 
     // Update Shared Text Style with new properties
-    sharedStyle.style.fontFamily = textLayer.style.fontFamily;
-    sharedStyle.style.fontWeight = textLayer.style.fontWeight;
-    sharedStyle.style.fontSize = textLayer.style.fontSize;
-    sharedStyle.style.fontStyle = textLayer.style.fontStyle;
-    sharedStyle.style.fontVariant = textLayer.style.fontVariant;
-    sharedStyle.style.textColor = textLayer.style.textColor;
-    sharedStyle.style.lineHeight = textLayer.style.lineHeight;
-    sharedStyle.style.paragraphSpacing = textLayer.style.paragraphSpacing;
+    syncTextStyles(sharedStyle, textLayer);
 
     // Get all layers which use the Shared Text Style
     var formattedLayers = getSharedStyleLayersById(textLayer.sharedStyleId);
@@ -47,7 +40,35 @@ export function updateFormattedTextStyle() {
       // Edit all text layers in array with updated baselineOffsets
       applyBaselineOffset(formattedLayers[i]);
     }
+    UI.message(formattedLayers.length + ' layer text styles updated');
   }
+}
+
+export function syncLibraryTextStyles() {
+
+  document.sharedTextStyles.forEach(function(sharedStyle, i) {
+
+    // Get all layers using the shared style
+    var layers = sharedStyle.getAllInstancesLayers();
+
+    // Build a list of text layers with formatting to re-apply
+    var textLayersToUpdateAfterSync = [];
+    layers.forEach(function(layer, i) {
+      textLayersToUpdateAfterSync.push(getTextFormatting(layer));
+    });
+
+    // Sync library style with local style
+    sharedStyle.syncWithLibrary();
+
+    // Update formatting on affected text layers
+    textLayersToUpdateAfterSync.forEach(function(layer) {
+      setLayerBaselineOffsets(layer);
+    });
+    
+  });
+
+  UI.message(document.sharedTextStyles.length + ' library styles synced');
+
 }
 
 function getSharedStyleById(sharedStyleId) {
@@ -139,4 +160,60 @@ function getBaselineOffsetValue(type, fontSize, scale) {
   } else if (type == "subscript") {
     return Math.floor(-0.375 * (fontSize - fontSize * scale));
   }
+}
+
+function getTextFormatting(layer) {
+
+  let textView = layer.sketchObject.attributedStringValue().treeAsDictionary();
+
+  var textViewObj = {
+    layer: layer,
+    //id: layer.id,
+    baselineOffsets: []
+  }
+
+  textView.attributes.forEach(function(attr) {
+    var baselineOffset = attr["NSBaselineOffset"];
+    if (baselineOffset != null && baselineOffset != 0) {
+
+      textViewObj.baselineOffsets.push({
+        type: baselineOffset < 0 ? "subscript" : "superscript",
+        location: attr["location"],
+        length: attr["length"],
+      });
+    }
+  });
+  return textViewObj;
+}
+
+function setLayerBaselineOffsets(obj) {
+
+  let layer = obj.layer;
+  let object = layer.sketchObject;
+
+  let fontSize = layer.style.fontSize;
+  let baseFont = object.font();
+
+  obj.baselineOffsets.forEach(function(baselineOffset) {
+
+    var range = NSMakeRange(baselineOffset.location, baselineOffset.length);
+
+    var baselineOffsetValue = getBaselineOffsetValue(baselineOffset.type, fontSize, settings.scale);
+    let smallerFont = NSFontManager.sharedFontManager().convertFont_toSize(baseFont, fontSize * settings.scale);
+
+    object.addAttribute_value_forRange(NSFontAttributeName, smallerFont, range);
+    object.addAttribute_value_forRange(NSBaselineOffsetAttributeName, baselineOffsetValue, range);
+  });
+
+}
+
+function syncTextStyles(toLayer, fromLayer) {
+  toLayer.style.fontFamily = fromLayer.style.fontFamily;
+  toLayer.style.fontWeight = fromLayer.style.fontWeight;
+  toLayer.style.fontSize = fromLayer.style.fontSize;
+  toLayer.style.fontStyle = fromLayer.style.fontStyle;
+  toLayer.style.fontVariant = fromLayer.style.fontVariant;
+  toLayer.style.textColor = fromLayer.style.textColor;
+  toLayer.style.lineHeight = fromLayer.style.lineHeight;
+  toLayer.style.paragraphSpacing = fromLayer.style.paragraphSpacing;
 }
