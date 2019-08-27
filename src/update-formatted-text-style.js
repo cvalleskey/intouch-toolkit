@@ -10,38 +10,51 @@ var settings = {
 };
 
 export function updateFormattedTextStyle() {
-  let textLayer = document.selectedLayers.layers[0];
-  let sharedStyle = getSharedStyleById(textLayer.sharedStyleId);
 
-  if (sharedStyle) {
+  var count = 0;
+  var layerCount = 0;
 
-    // Update Shared Text Style with new properties
-    syncTextStyles(sharedStyle, textLayer);
+  document.selectedLayers.forEach(function(layer) {
 
-    // Get all layers which use the Shared Text Style
-    var formattedLayers = getSharedStyleLayersById(textLayer.sharedStyleId);
+    if(layer.type == "Text") {
 
-    // Update all text layers that use this shared style
-    var allLayersWithSharedStyle = getAllLayersWithSharedStyle(sharedStyle);
-    for(var i = 0; i < allLayersWithSharedStyle.length; i++) {
-      var layer = allLayersWithSharedStyle[i];
+      let sharedStyle = getSharedStyleById(layer.sharedStyleId);
 
-      // Apply new shared style to all formatted layers and apply formatting
-      layer.style.syncWithSharedStyle(sharedStyle);
+      if (sharedStyle) {
+
+        // Update Shared Text Style with new properties
+        syncTextStyles(sharedStyle, layer);
+
+        // Get all layers which use the Shared Text Style
+        var formattedLayers = getSharedStyleLayersById(layer.sharedStyleId);
+
+        // Update all text layers that use this shared style
+        var allLayersWithSharedStyle = getAllLayersWithSharedStyle(sharedStyle);
+        for(var i = 0; i < allLayersWithSharedStyle.length; i++) {
+          var layer = allLayersWithSharedStyle[i];
+
+          // Apply new shared style to all formatted layers and apply formatting
+          //layer.style.syncWithSharedStyle(sharedStyle);
+          syncTextStyles(layer, sharedStyle);
+        }
+
+        // Update text styles with formatting saved
+        for (var i = 0; i < formattedLayers.length; i++) {
+          var layer = formattedLayers[i].layer;
+
+          // Apply new shared style to all formatted layers and apply formatting
+          //layer.style.syncWithSharedStyle(sharedStyle);
+          syncTextStyles(layer, sharedStyle);
+
+          // Edit all text layers in array with updated baselineOffsets
+          applyBaselineOffset(formattedLayers[i]);
+        }
+        layerCount += formattedLayers.length;
+        count++;
+      }
     }
-
-    // Update text styles with formatting saved
-    for (var i = 0; i < formattedLayers.length; i++) {
-      var layer = formattedLayers[i].layer;
-
-      // Apply new shared style to all formatted layers and apply formatting
-      layer.style.syncWithSharedStyle(sharedStyle);
-
-      // Edit all text layers in array with updated baselineOffsets
-      applyBaselineOffset(formattedLayers[i]);
-    }
-    UI.message(formattedLayers.length + ' layer text styles updated');
-  }
+  });
+  UI.message(count + ' selected text style' + (count==1? '':'s') + ' and ' + layerCount + ' layer' + (layerCount==1? '':'s') + ' synced');
 }
 
 export function syncLibraryTextStyles() {
@@ -64,7 +77,7 @@ export function syncLibraryTextStyles() {
     textLayersToUpdateAfterSync.forEach(function(layer) {
       setLayerBaselineOffsets(layer);
     });
-    
+
   });
 
   UI.message(document.sharedTextStyles.length + ' library styles synced');
@@ -168,7 +181,6 @@ function getTextFormatting(layer) {
 
   var textViewObj = {
     layer: layer,
-    //id: layer.id,
     baselineOffsets: []
   }
 
@@ -190,7 +202,6 @@ function setLayerBaselineOffsets(obj) {
 
   let layer = obj.layer;
   let object = layer.sketchObject;
-
   let fontSize = layer.style.fontSize;
   let baseFont = object.font();
 
@@ -215,5 +226,5 @@ function syncTextStyles(toLayer, fromLayer) {
   toLayer.style.fontVariant = fromLayer.style.fontVariant;
   toLayer.style.textColor = fromLayer.style.textColor;
   toLayer.style.lineHeight = fromLayer.style.lineHeight;
-  toLayer.style.paragraphSpacing = fromLayer.style.paragraphSpacing;
+  //toLayer.style.paragraphSpacing = fromLayer.style.paragraphSpacing;
 }

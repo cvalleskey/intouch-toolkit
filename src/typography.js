@@ -5,14 +5,19 @@ var document = Document.getSelectedDocument();
 let page = document.selectedPage;
 
 var config = {
-  base : "m",
-  labels: ["xxxl","xxl","xl","l","m","s","xs","xxs","xxxs"],
+  labels: ["xxxs","xxs","xs","s","m","l","xl","xxl","xxxl"],
   markup: {
     heading: { xxl: "h1", xl: "h2", l: "h3", m: "h4", s: "h5", xs: "h6"
     },
     body: { m: "p", }
   },
-  spacing: { y : 16, x : 64 }
+  spacing: { y : 16, x : 64 },
+  viewport: {
+    min: 600,
+    max: 1200
+  },
+  breakpoints: ["mobile", "desktop"],
+  baseScale: 4
 }
 
 var settings = {
@@ -36,7 +41,7 @@ var settings = {
       cssFontWeight: 400,
       sketchFontWeight: 12,
       scale : [1.25, 1.5],
-      margin: 0.25
+      margin: 0.5
     }
   ],
   round: true
@@ -45,60 +50,58 @@ var settings = {
 export function updateFontScales() {
 
   for(var i = 0; i < settings.fonts.length; i++) {
-
     var font = settings.fonts[i];
-
-    font.minFontSize = generateFontScale(font.scale[0]);
-    font.maxFontSize = generateFontScale(font.scale[1]);
-
+    font.fontSizes = [];
+    for(var s = 0; s < font.scale.length; s++) {
+      font.fontSizes.push(generateFontScale(font.scale[s]));
+    }
   }
 
-  renderFontScales();
   updateSharedTextStyles();
+  renderFontScales();
 
+  //outputCSSClasses();
+
+}
+
+function outputCSSClasses() {
+  for(var i = 0; i < settings.fonts.length; i++) {
+
+  }
 }
 
 function updateSharedTextStyles() {
   for(var i = 0; i < settings.fonts.length; i++) {
     var font = settings.fonts[i];
-    generateSharedTextStyles(font, font.minFontSize, capitalize(font.type) + '/Mobile');
-    generateSharedTextStyles(font, font.maxFontSize, capitalize(font.type) + '/Desktop');
-  }
-}
 
-function generateSharedTextStyles(font, scale, label) {
-  for(var s = 0; s < scale.length; s++) {
+    for(var s = 0; s < font.fontSizes.length; s++) {
 
-    var semanticTag = config.markup[font.type][config.labels[s]];
-    var name = styleName(label, s, semanticTag);
-    //log(name)
+      var sizes = font.fontSizes[s];
 
-    var size = scale[(scale.length - 1) - s]; // flip the order
-    var sharedTextStyle = getSharedTextStyleByName(name);
+      for(var z = 0; z < sizes.length; z++) {
 
-    if(sharedTextStyle) {
-      //log("it exists")
-      //log(name)
-      //updateSharedTextStyle();
-      sharedTextStyle.style.fontSize = round(size);
-      sharedTextStyle.style.fontFamily = font.fontFamily;
-      sharedTextStyle.style.fontWeight = font.sketchFontWeight;
-      sharedTextStyle.style.paragraphSpacing = round(font.margin * size);
-      sharedTextStyle.style.lineHeight = round(font.lineHeight * size);
-    } else {
-      //log("it does not exist");
-      //log(name)
-      sharedTextStyle = document.sharedTextStyles.push({
-        name: name,
-        style: {
-          fontSize : round(size),
-          fontFamily: font.fontFamily,
-          fontWeight: font.sketchFontWeight,
-          paragraphSpacing: round(font.margin * size),
-          lineHeight: round(font.lineHeight * size)
+        var size = sizes[z]; // flip the order
+        var name = styleName(font.type, config.breakpoints[s], z)
+        var sharedTextStyle = getSharedTextStyleByName(name);
+        if(sharedTextStyle) {
+          sharedTextStyle.style.fontSize = round(size);
+          sharedTextStyle.style.fontFamily = font.fontFamily;
+          sharedTextStyle.style.fontWeight = font.sketchFontWeight;
+          sharedTextStyle.style.paragraphSpacing = round(font.margin * size);
+          sharedTextStyle.style.lineHeight = round(font.lineHeight * size);
+        } else {
+          sharedTextStyle = document.sharedTextStyles.push({
+            name: name,
+            style: {
+              fontSize : round(size),
+              fontFamily: font.fontFamily,
+              fontWeight: font.sketchFontWeight,
+              paragraphSpacing: round(font.margin * size),
+              lineHeight: round(font.lineHeight * size)
+            }
+          });
         }
-      });
-      //sharedTextStyle.style.lineHeight = round(font.lineHeight * size);
+      }
     }
   }
 }
@@ -118,11 +121,10 @@ function getSharedTextStyleByName(name) {
 
 function generateFontScale(scale) {
 
-  var baseLabel = Math.floor(config.labels.length/2-1);
   var scaleArray = [];
 
   for(var i = 0; i < config.labels.length; i++) {
-    var fontSize = settings.baseFontSize * Math.pow(scale, i - baseLabel);
+    var fontSize = settings.baseFontSize * Math.pow(scale, i - config.baseScale);
     if(fontSize < settings.minFontSize) {
       fontSize = settings.minFontSize;
     }
@@ -142,51 +144,47 @@ function renderFontScales() {
 
     var _y = 0;
 
-    var minGroup = new Document.Group({
-      parent: page
-    });
+    for(var s = 0; s < font.fontSizes.length; s++) {
 
-    for(var s = font.minFontSize.length-1; s >= 0; s--) {
-      var text = renderTextLayer(minGroup, font, font.minFontSize[s], s+1, 'min');
-      text.frame.y = _y;
-      _y += text.frame.height + config.spacing.y;
+      var sizes = font.fontSizes[s];
+      var group = new Document.Group({ parent: page });
+
+      for(var z = 0; z < sizes.length; z++) {
+
+        var name = styleName(font.type, config.breakpoints[s], z)
+        var text = renderTextLayer(group, font, sizes[z], name);
+
+        text.frame.y = _y;
+        _y += text.frame.height + config.spacing.y;
+      }
+
+      group.adjustToFit();
+      group.frame.x = _x;
+      _y += config.spacing.y;
     }
-
-    minGroup.adjustToFit();
-    minGroup.frame.x = _x;
-    _x += minGroup.frame.width + config.spacing.x;
-
-    var maxGroup = new Document.Group({
-      parent: page
-    });
-
-    var _y = 0;
-
-    for(var s = font.maxFontSize.length-1; s >= 0; s--) {
-      var text = renderTextLayer(maxGroup, font, font.maxFontSize[s], s+1, 'max');
-      text.frame.y = _y;
-      _y += text.frame.height + config.spacing.y;
-    }
-
-    maxGroup.adjustToFit();
-    maxGroup.frame.x = _x;
-    _x += maxGroup.frame.width + config.spacing.x;
+    _x += group.frame.width + config.spacing.x;
   }
-
 }
 
-function renderTextLayer(parent, font, size, level, label) {
+//function renderTextLayer(parent, font, size, level, label) {
+function renderTextLayer(parent, font, size, label) {
+
+  var sharedTextStyle = getSharedTextStyleByName(label);
+
   var text = new Document.Text({
     parent: parent,
-    text: capitalize(font.type + ' level ' + level) + "(" + label + ")",
+    text: label,
     style : {
       fontSize : round(size),
       fontFamily: font.fontFamily,
       fontWeight: font.sketchFontWeight,
-      paragraphSpacing: round(font.margin * size)
-    }
+      paragraphSpacing: round(font.margin * size),
+      lineHeight: round(font.lineHeight * size)
+    },
+    sharedStyleId: sharedTextStyle.id
   });
   text.style.lineHeight = round(font.lineHeight * size); // this must be set after Text layer is created
+  //text.sharedStyleId = sharedTextStyle.id;
   return text;
 }
 
@@ -204,10 +202,13 @@ const round = (num) => {
   return settings.round? Math.round(num) : num
 }
 
-const styleName = (type,level,tag) => {
-  var name = capitalize(type) + "/" + "Level " + (level + 1) + " (" + uppercase(config.labels[level]) + ")";
-  if(tag != undefined) {
-    name += " — " + uppercase(tag)
+const styleName = (type, device, level) => {
+  var name = capitalize(type);
+  name += "/" + capitalize(device) + "/";
+  name += "Level " + (level + 1) + " (" + uppercase(config.labels[level]) + ")";
+  var semanticTag = config.markup[type][config.labels[level]];
+  if(semanticTag != undefined) {
+    name += " — " + uppercase(semanticTag)
   }
   return name;
 }

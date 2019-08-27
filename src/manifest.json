@@ -25,7 +25,7 @@
       }
     },
     {
-      "name": "Update Selected Text Style",
+      "name": "Update Selected Text Styles",
       "identifier": "intouch-toolkit.update-formatted-text-style",
       "shortcut": "ctrl command s",
       "script": "./update-formatted-text-style.js",
