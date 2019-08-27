@@ -219,12 +219,17 @@ function setLayerBaselineOffsets(obj) {
 }
 
 function syncTextStyles(toLayer, fromLayer) {
+
   toLayer.style.fontFamily = fromLayer.style.fontFamily;
   toLayer.style.fontWeight = fromLayer.style.fontWeight;
   toLayer.style.fontSize = fromLayer.style.fontSize;
   toLayer.style.fontStyle = fromLayer.style.fontStyle;
   toLayer.style.fontVariant = fromLayer.style.fontVariant;
   toLayer.style.textColor = fromLayer.style.textColor;
+
+  // Note:
+  // The order of these styles being applied matters. If you try to do paragraph
+  // spacing afterwards, it applies it to every single line as a glitch.
+  toLayer.style.paragraphSpacing = fromLayer.style.paragraphSpacing;
   toLayer.style.lineHeight = fromLayer.style.lineHeight;
-  //toLayer.style.paragraphSpacing = fromLayer.style.paragraphSpacing;
 }
