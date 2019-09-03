@@ -3,6 +3,43 @@
   "bundleVersion": 1,
   "icon": "icon.png",
   "commands": [
+
+    {
+      "name": "Build Styleguide...",
+      "identifier": "intouch-toolkit.styleguide.get-styleguide",
+      "script": "./styleguide.js",
+      "handlers": { "run": "getStyleguide" }
+    },
+    {
+      "name": "Generate All",
+      "identifier": "intouch-toolkit.styleguide.generate-all",
+      "script": "./styleguide.js",
+      "handlers": { "run": "generateAll" }
+    },
+    {
+      "name": "Generate Spacing...",
+      "identifier": "intouch-toolkit.styleguide.generate-spacing",
+      "script": "./styleguide.js",
+      "handlers": { "run": "generateSpacing" }
+    },
+    {
+      "name": "Generate Type Scale...",
+      "identifier": "intouch-toolkit.styleguide.generate-type-scale",
+      "script": "./styleguide.js",
+      "handlers": { "run": "generateTypeScale" }
+    },
+    {
+      "name": "Generate Colors",
+      "identifier": "intouch-toolkit.styleguide.generate-colors",
+      "script": "./styleguide.js",
+      "handlers": { "run": "generateColors" }
+    },
+    {
+      "name": "Generate Gradients",
+      "identifier": "intouch-toolkit.styleguide.generate-gradients",
+      "script": "./styleguide.js",
+      "handlers": { "run": "generateGradients" }
+    },
     {
       "name": "Toggle Superscript",
       "identifier": "intouch-toolkit.auto-superscript",
@@ -133,6 +170,19 @@
   "menu": {
     "title": "Intouch Toolkit",
     "items": [
+      {
+        "title": "Styleguide",
+        "items": [
+          "intouch-toolkit.styleguide.get-styleguide",
+          "intouch-toolkit.styleguide.generate-all",
+          "intouch-toolkit.styleguide.generate-spacing",
+          "intouch-toolkit.styleguide.generate-type-scale",
+          "intouch-toolkit.styleguide.generate-colors",
+          "intouch-toolkit.styleguide.generate-gradients",
+          "-",
+          "intouch-toolkit.styleguide.sync"
+        ]
+      },
       {
         "title": "Typography",
         "items": [

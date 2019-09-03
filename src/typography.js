@@ -26,7 +26,7 @@ var settings = {
   fonts: [
     {
       type: "body",
-      fontFamily: "Open Sans",
+      fontFamily: "Univers LT Std",
       lineHeight: 1.5,
       cssFontWeight: 400,
       sketchFontWeight: 5,
@@ -36,7 +36,7 @@ var settings = {
     },
     {
       type: "heading",
-      fontFamily: "Abril Fatface",
+      fontFamily: "Univers LT Std",
       lineHeight: 1.125,
       cssFontWeight: 400,
       sketchFontWeight: 12,
