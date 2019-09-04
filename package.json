@@ -15,7 +15,8 @@
     "sketch-assets-file": "sketch-assets/icons.sketch"
   },
   "repository": {
-    "url": "https://github.com/cvalleskey/intouch-toolkit"
+    "type": "git",
+    "url": "https://github.com/cvalleskey/intouch-toolkit.git"
   },
   "scripts": {
     "build": "skpm-build",
