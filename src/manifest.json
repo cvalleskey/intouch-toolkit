@@ -157,36 +157,21 @@
   "menu": {
     "title": "Intouch Toolkit",
     "items": [
-      "intouch-toolkit.styleguide.get-styleguide",
-      {
-        "title": "Generate...",
-        "items": [
-          "intouch-toolkit.styleguide.generate-type-scale",
-          "intouch-toolkit.styleguide.generate-spacing",
-          "intouch-toolkit.styleguide.generate-colors"
-        ]
-      },
-      "-",
       "intouch-toolkit.auto-superscript",
       "intouch-toolkit.auto-subscript",
       "intouch-toolkit.update-formatted-text-style",
       "intouch-toolkit.sync-library-text-styles",
       "-",
+      "intouch-toolkit.generate-grid",
       {
-        "title": "Utility",
+        "title": "Create padding around selection",
         "items": [
-          "intouch-toolkit.generate-grid",
-          {
-            "title": "Padding",
-            "items": [
-              "intouch-toolkit.create-padding.xsmall",
-              "intouch-toolkit.create-padding.small",
-              "intouch-toolkit.create-padding.medium",
-              "intouch-toolkit.create-padding.large",
-              "intouch-toolkit.create-padding.xlarge",
-              "intouch-toolkit.create-padding.xxlarge"
-            ]
-          }
+          "intouch-toolkit.create-padding.xsmall",
+          "intouch-toolkit.create-padding.small",
+          "intouch-toolkit.create-padding.medium",
+          "intouch-toolkit.create-padding.large",
+          "intouch-toolkit.create-padding.xlarge",
+          "intouch-toolkit.create-padding.xxlarge"
         ]
       }
     ]
