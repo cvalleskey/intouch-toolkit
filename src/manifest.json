@@ -3,42 +3,29 @@
   "bundleVersion": 1,
   "icon": "icon.png",
   "commands": [
-
     {
-      "name": "Build Styleguide...",
+      "name": "Export Styleguide",
       "identifier": "intouch-toolkit.styleguide.get-styleguide",
       "script": "./styleguide.js",
-      "handlers": { "run": "getStyleguide" }
+      "handlers": { "run": "exportStyleguide" }
     },
     {
-      "name": "Generate All",
-      "identifier": "intouch-toolkit.styleguide.generate-all",
-      "script": "./styleguide.js",
-      "handlers": { "run": "generateAll" }
-    },
-    {
-      "name": "Generate Spacing...",
+      "name": "Spacing Units",
       "identifier": "intouch-toolkit.styleguide.generate-spacing",
       "script": "./styleguide.js",
       "handlers": { "run": "generateSpacing" }
     },
     {
-      "name": "Generate Type Scale...",
+      "name": "Type Scale",
       "identifier": "intouch-toolkit.styleguide.generate-type-scale",
       "script": "./styleguide.js",
       "handlers": { "run": "generateTypeScale" }
     },
     {
-      "name": "Generate Colors",
+      "name": "Color Range",
       "identifier": "intouch-toolkit.styleguide.generate-colors",
       "script": "./styleguide.js",
       "handlers": { "run": "generateColors" }
-    },
-    {
-      "name": "Generate Gradients",
-      "identifier": "intouch-toolkit.styleguide.generate-gradients",
-      "script": "./styleguide.js",
-      "handlers": { "run": "generateGradients" }
     },
     {
       "name": "Toggle Superscript",
@@ -170,43 +157,36 @@
   "menu": {
     "title": "Intouch Toolkit",
     "items": [
+      "intouch-toolkit.styleguide.get-styleguide",
       {
-        "title": "Styleguide",
+        "title": "Generate...",
         "items": [
-          "intouch-toolkit.styleguide.get-styleguide",
-          "intouch-toolkit.styleguide.generate-all",
-          "intouch-toolkit.styleguide.generate-spacing",
           "intouch-toolkit.styleguide.generate-type-scale",
-          "intouch-toolkit.styleguide.generate-colors",
-          "intouch-toolkit.styleguide.generate-gradients",
-          "-",
-          "intouch-toolkit.styleguide.sync"
-        ]
-      },
-      {
-        "title": "Typography",
-        "items": [
-          "intouch-toolkit.auto-superscript",
-          "intouch-toolkit.auto-subscript",
-          "-",
-          "intouch-toolkit.update-formatted-text-style",
-          "intouch-toolkit.sync-library-text-styles",
-          "-",
-          "intouch-toolkit.create-typography-scale"
+          "intouch-toolkit.styleguide.generate-spacing",
+          "intouch-toolkit.styleguide.generate-colors"
         ]
       },
       "-",
-      "intouch-toolkit.generate-grid",
-
+      "intouch-toolkit.auto-superscript",
+      "intouch-toolkit.auto-subscript",
+      "intouch-toolkit.update-formatted-text-style",
+      "intouch-toolkit.sync-library-text-styles",
+      "-",
       {
-        "title": "Create Padding",
+        "title": "Utility",
         "items": [
-          "intouch-toolkit.create-padding.xsmall",
-          "intouch-toolkit.create-padding.small",
-          "intouch-toolkit.create-padding.medium",
-          "intouch-toolkit.create-padding.large",
-          "intouch-toolkit.create-padding.xlarge",
-          "intouch-toolkit.create-padding.xxlarge"
+          "intouch-toolkit.generate-grid",
+          {
+            "title": "Padding",
+            "items": [
+              "intouch-toolkit.create-padding.xsmall",
+              "intouch-toolkit.create-padding.small",
+              "intouch-toolkit.create-padding.medium",
+              "intouch-toolkit.create-padding.large",
+              "intouch-toolkit.create-padding.xlarge",
+              "intouch-toolkit.create-padding.xxlarge"
+            ]
+          }
         ]
       }
     ]

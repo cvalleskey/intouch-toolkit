@@ -32,43 +32,6 @@ var settings = {
   distanceBetweenSpaces: 16
 }
 
-var skyriziConfig = {
-  colors : [
-    { name: "AbbVie Blue", color: "#071d49ff" },
-    { name: "Light Blue",  color: "#baecffff" },
-    { name: "Blue",  color: "#1ba2daff" },
-    { name: "Text",  color: "#29333fff" },
-    { name: "Dark Blue", color: "#29333fff" }
-  ],
-  spacing : [
-    { name: "1", value: 4 },
-    { name: "2", value: 8 },
-    { name: "3", value: 12 },
-    { name: "4", value: 16 },
-    { name: "5", value: 20 },
-    { name: "6", value: 24 },
-    { name: "10", value: 40 },
-    { name: "12", value: 48 },
-    { name: "16", value: 64 },
-    { name: "20", value: 80 },
-    { name: "24", value: 96 },
-    { name: "32", value: 128 },
-    { name: "40", value: 160 },
-    { name: "48", value: 192 },
-    { name: "56", value: 224 },
-    { name: "64", value: 256 }
-  ],
-  textStyles : [
-    {
-      name: "Heading/Desktop/Level 8 (XXL) — H1",
-      fontSize: { min: 2, max: 3.25 },
-      font: "Abril Fatface",
-      lineHeight: 1.125, // unitless
-      marginBottom: 0.5 // taken from paragraphSpacing attribute in Sketch
-    },
-  ]
-}
-
 var baseConfig = {
 
 /*-------------------------------------------*\
@@ -382,7 +345,7 @@ export function generateGradients() {
 
 }
 
-export function getStyleguide() {
+export function exportStyleguide() {
 
   var colors = [];
   document.colors.forEach((item) => {
@@ -434,7 +397,7 @@ export function getStyleguide() {
   }
 
   log(styleguide)
-  //UI.alert('my title', JSON.stringify(styleguide))
+  UI.alert('my title', JSON.stringify(styleguide))
 
 }
 

@@ -1,9 +1,10 @@
 {
   "name": "intouch-toolkit",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "engines": {
     "sketch": ">=3.0"
   },
+  "description": "Productivity tools for use in project work",
   "skpm": {
     "name": "Intouch Toolkit",
     "manifest": "src/manifest.json",
@@ -12,6 +13,9 @@
       "assets/**/*"
     ],
     "sketch-assets-file": "sketch-assets/icons.sketch"
+  },
+  "repository": {
+    "url": "https://github.com/cvalleskey/intouch-toolkit"
   },
   "scripts": {
     "build": "skpm-build",
