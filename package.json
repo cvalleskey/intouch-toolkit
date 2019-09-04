@@ -12,7 +12,8 @@
     "assets": [
       "assets/**/*"
     ],
-    "sketch-assets-file": "sketch-assets/icons.sketch"
+    "sketch-assets-file": "sketch-assets/icons.sketch",
+    "private" : true
   },
   "repository": {
     "type": "git",
