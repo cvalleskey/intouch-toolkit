@@ -20,6 +20,8 @@ var config = {
   baseScale: 4
 }
 
+
+// Example settings for now, will replace with a UI soon
 var settings = {
   minFontSize: 12,
   baseFontSize: 16,
