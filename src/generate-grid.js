@@ -41,7 +41,18 @@ export default function () {
 
   // only show the window when the page has loaded to avoid a white flash
   browserWindow.once('ready-to-show', () => {
-    browserWindow.show()
+
+    var document = Document.getSelectedDocument();
+    let page = document.selectedPage;
+    var selection = document.selectedLayers;
+    var selected = (selection.length == 1)? selection.layers[0] : false;
+
+    if(selected) {
+      browserWindow.show()
+    } else {
+      getWebview(webviewIdentifier).close();
+      UI.message('Select a layer or artboard to generate a grid.');
+    }
   })
 
   const webContents = browserWindow.webContents
