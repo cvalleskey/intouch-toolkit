@@ -1,6 +1,6 @@
 {
   "name": "intouch-toolkit",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "engines": {
     "sketch": ">=3.0"
   },
@@ -13,7 +13,7 @@
       "assets/**/*"
     ],
     "sketch-assets-file": "sketch-assets/icons.sketch",
-    "private" : true
+    "private": true
   },
   "repository": {
     "type": "git",
