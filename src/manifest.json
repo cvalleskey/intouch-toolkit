@@ -17,9 +17,14 @@
     },
     {
       "name": "Type Scale",
-      "identifier": "intouch-toolkit.styleguide.generate-type-scale",
-      "script": "./styleguide.js",
-      "handlers": { "run": "generateTypeScale" }
+      "identifier": "intouch-toolkit.generate-type-scale",
+      "script": "./generate-type-scale.js",
+      "handlers": {
+        "run": "onRun",
+        "actions": {
+          "Shutdown": "onShutdown"
+        }
+      }
     },
     {
       "name": "Color Range",
@@ -159,12 +164,19 @@
     "items": [
       "intouch-toolkit.auto-superscript",
       "intouch-toolkit.auto-subscript",
-      "intouch-toolkit.update-formatted-text-style",
-      "intouch-toolkit.sync-library-text-styles",
+      "-",
+      {
+        "title": "Text Styles",
+        "items": [
+          "intouch-toolkit.update-formatted-text-style",
+          "intouch-toolkit.sync-library-text-styles"
+        ]
+      },
       "-",
       "intouch-toolkit.generate-grid",
+      "intouch-toolkit.generate-type-scale",
       {
-        "title": "Create padding around selection",
+        "title": "Create Padding",
         "items": [
           "intouch-toolkit.create-padding.xsmall",
           "intouch-toolkit.create-padding.small",

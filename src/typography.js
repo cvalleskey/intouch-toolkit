@@ -34,7 +34,6 @@ var settings = {
       sketchFontWeight: 5,
       scale : [1.125, 1.25],
       margin: 0.5
-
     },
     {
       type: "heading",

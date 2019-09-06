@@ -73,6 +73,10 @@ export function syncLibraryTextStyles() {
     // Sync library style with local style
     sharedStyle.syncWithLibrary();
 
+    // var copiedSharedStyle = {
+    //   style : sharedStyle.style
+    // }
+
     // Update formatting on affected text layers
     textLayersToUpdateAfterSync.forEach(function(layer) {
       setLayerBaselineOffsets(layer);
@@ -181,7 +185,9 @@ function getTextFormatting(layer) {
 
   var textViewObj = {
     layer: layer,
-    baselineOffsets: []
+    baselineOffsets: [],
+    textColor: layer.style.textColor,
+    alignment: layer.style.alignment
   }
 
   textView.attributes.forEach(function(attr) {
@@ -216,16 +222,26 @@ function setLayerBaselineOffsets(obj) {
     object.addAttribute_value_forRange(NSBaselineOffsetAttributeName, baselineOffsetValue, range);
   });
 
+  // Reset layer's text alignment and color
+  layer.style.alignment = obj.alignment;
+  layer.style.textColor = obj.textColor;
+
 }
 
 function syncTextStyles(toLayer, fromLayer) {
+
+  // log('from:')
+  // log(fromLayer.style.fontFamily)
+  //
+  // log('to:')
+  // log(toLayer.style.fontFamily)
 
   toLayer.style.fontFamily = fromLayer.style.fontFamily;
   toLayer.style.fontWeight = fromLayer.style.fontWeight;
   toLayer.style.fontSize = fromLayer.style.fontSize;
   toLayer.style.fontStyle = fromLayer.style.fontStyle;
   toLayer.style.fontVariant = fromLayer.style.fontVariant;
-  toLayer.style.textColor = fromLayer.style.textColor;
+  //toLayer.style.textColor = fromLayer.style.textColor;
 
   // Note:
   // The order of these styles being applied matters. If you try to do paragraph
