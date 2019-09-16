@@ -8,7 +8,7 @@
 
 ### Features
 
-- __Superscript__: Photoshop-like it-just-works superscripts. Supports Text Styles and use with Shared Libraries.
+- __Superscript__: Make and edit superscripts with ease. Supports Text Styles and use with Shared Libraries.
 
 - __Generate Grid__: Creates a series of layers which match website grid specs exactly at any device size. Supports a defined list of column counts, with percentages or pixel values allowed for column gutters and margins.
 

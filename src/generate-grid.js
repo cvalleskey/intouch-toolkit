@@ -5,6 +5,29 @@ import Document from 'sketch/dom'
 
 const webviewIdentifier = 'intouch-toolkit.webview'
 
+const config = {
+  colors : {
+    column : '#00FF0005',
+    gutter : '#F32C3A',
+    margin : '#456BF9'
+  },
+  patterns : {
+    gutter : "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAASklEQVR4AWL4rGuT/V/PjZuBjgBkH8jezzpWgPbmwAKAKIqB4Cv9Sj/5TSxMIBbMdyW+vxJfw+FwOBwOh8Ph8BaHw7cSf16Jz/0B8zwMcB35KKgAAAAASUVORK5CYII=",
+    margin: "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAASUlEQVR4AWJwz/6R7VbynxvQ/hwaARDDMBB0wV/Etx2WsXmoRfaI4I5qsfbG/c5fSby3kvjqeTgcDofD4XA4HA6HP0vi4yXxdi8xLzuw8dlqTgAAAABJRU5ErkJggg=="
+  }
+}
+
+const defaults = {
+  columns : 3,
+  columnCount: 12,
+  breakpoint : "auto",
+  gutter : true,
+  gutterSize : '2%',
+  margin : true,
+  marginSize : 20,
+  containerWidth : 1180
+}
+
 function loadLocalImage(filePath) {
     if(!NSFileManager.defaultManager().fileExistsAtPath(filePath)) {
         return null;
@@ -13,6 +36,7 @@ function loadLocalImage(filePath) {
 }
 
 export default function () {
+
   const options = {
     identifier: webviewIdentifier,
     width: 480,
@@ -20,21 +44,6 @@ export default function () {
     show: false,
     title: 'Generate Grid',
     titleBarStyle: 'hiddenInset'
-  }
-  const settings = {
-    containerWidth : 1180,
-    marginSize: 20,
-    gutterSize : '2%',
-    colors : {
-      column : '#00FF0005',
-      gutter : '#F32C3A',
-      margin : '#456BF9'
-    },
-    patterns : {
-      gutter : "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAASklEQVR4AWL4rGuT/V/PjZuBjgBkH8jezzpWgPbmwAKAKIqB4Cv9Sj/5TSxMIBbMdyW+vxJfw+FwOBwOh8Ph8BaHw7cSf16Jz/0B8zwMcB35KKgAAAAASUVORK5CYII=",
-      margin: "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAASUlEQVR4AWJwz/6R7VbynxvQ/hwaARDDMBB0wV/Etx2WsXmoRfaI4I5qsfbG/c5fSby3kvjqeTgcDofD4XA4HA6HP0vi4yXxdi8xLzuw8dlqTgAAAABJRU5ErkJggg=="
-    },
-    columnCount: 12
   }
 
   const browserWindow = new BrowserWindow(options)
@@ -64,6 +73,25 @@ export default function () {
 
   webContents.on('makeGrid', s => {
 
+    generateGrid(s);
+    getWebview(webviewIdentifier).close();
+
+  });
+
+  browserWindow.loadURL(require('../resources/generate-grid.html'))
+}
+
+// When the plugin is shutdown by Sketch (for example when the user disable the plugin)
+// we need to close the webview if it's open
+export function onShutdown() {
+  const existingWebview = getWebview(webviewIdentifier)
+  if (existingWebview) {
+    existingWebview.close()
+  }
+}
+
+function generateGrid(settings) {
+
     var document = Document.getSelectedDocument();
     let page = document.selectedPage;
     var selection = document.selectedLayers;
@@ -75,17 +103,17 @@ export default function () {
       return;
     }
 
-    var columns = s.columns;
-    var gutter = Number(s.gutter);
-    var gutterSize = s.gutterSize.includes("%")? s.gutterSize : Number(s.gutterSize);
-    var margin = Number(s.margin);
-    var marginSize = s.marginSize.includes("%")? s.marginSize : Number(s.marginSize);
+    var columns = settings.columns;
+    var gutter = settings.gutter;
+    var gutterSize = settings.gutterSize;
+    var margin = settings.margin;
+    var marginSize = settings.marginSize;
 
-    // Math to change breakpoint if artboard is selected vs. object, and if the size is smaller than the max
-    if(s.breakpoint == "auto") {
-      var breakpoint = s.breakpoint;
+    // Math to change breakpoint if artboard is selected vsettings. object, and if the size is smaller than the max
+    if(settings.breakpoint == "auto") {
+      var breakpoint = settings.breakpoint;
     } else {
-      var breakpoint = Number(s.breakpoint);
+      var breakpoint = Number(settings.breakpoint);
     }
 
     if(selected) {
@@ -122,7 +150,7 @@ export default function () {
     }
 
     // Calculate single column width
-    let pixelColumnWidth = Number(((containerFinalWidth - (pixelGutterSize)*(settings.columnCount-1)) / settings.columnCount).toFixed(2));
+    let pixelColumnWidth = parseFloat(((containerFinalWidth - (pixelGutterSize)*(settings.columnCount-1)) / settings.columnCount).toFixed(2), 10);
 
     var columnsArray = [];
 
@@ -142,7 +170,6 @@ export default function () {
         UI.message('To use auto, please select an artboard.');
         return;
       }
-
 
     } else if(columns == "1") {
       columns = [12];
@@ -196,7 +223,7 @@ export default function () {
       }
     }
 
-    var gridSettings = {
+    var grids = {
       name : '📐 Grid',
       frame : {
         width : breakpoint,
@@ -205,24 +232,25 @@ export default function () {
     }
 
     if(selected.type == "Artboard") {
-      gridSettings.parent = selected;
-      gridSettings.frame.x = (selected.frame.width - breakpoint) / 2;
-      // gridSettings.frame.y = 0;
+      grids.parent = selected;
+      grids.frame.x = (selected.frame.width - breakpoint) / 2;
+      // gridsettings.frame.y = 0;
     } else if(selected.type == "ShapePath") {
       if(breakpoint >= selected.frame.width) {
-        gridSettings.frame.x = selected.frame.x;
+        grids.frame.x = selected.frame.x;
       } else {
-        gridSettings.frame.x = (selected.frame.width - breakpoint) / 2;
+        grids.frame.x = (selected.frame.width - breakpoint) / 2;
       }
-      gridSettings.frame.y = selected.frame.y;
+      grids.frame.y = selected.frame.y;
       if(selected.getParentArtboard() == undefined) {
-        gridSettings.parent = page;
+        grids.parent = page;
       } else {
-        gridSettings.parent = selected.getParentArtboard();
+        //gridsettings.parent = selected.getParentArtboard();
+        grids.parent = selected.parent;
       }
     }
 
-    var gridGroup = new Document.Group(gridSettings);
+    var gridGroup = new Document.Group(grids);
 
     var _x = 0;
     var _y = 0;
@@ -240,7 +268,7 @@ export default function () {
             width: el.width,
             height: (selection.length == 1)? selection.layers[0].frame.height : 100
           },
-          style: { fills: [settings.colors.column] }
+          style: { fills: [config.colors.column] }
       });
 
       if(el.type == "gutter" || el.type == "margin") {
@@ -250,14 +278,14 @@ export default function () {
             pattern : {
               patternType : Document.Style.PatternFillType.Tile,
               tileScale : 0.25,
-              image : { "base64": settings.patterns[el.type]}
-              //image : loadLocalImage("/Users/chris.valleskey/Documents/github/intouch-toolkit/intouch-toolkit.sketchplugin/Contents/Resources/shade-" + el.type + ".png"),
+              image : { "base64": config.patterns[el.type]}
+              //image : loadLocalImage("/Users/chrisettings.valleskey/Documents/github/intouch-toolkit/intouch-toolkit.sketchplugin/Contents/Resources/shade-" + el.type + ".png"),
             }
           }
         ];
         shape.style.innerShadows = [
-          { color : settings.colors[el.type], x : 1, y : 0, blur : 0, spread : 0 },
-          { color : settings.colors[el.type], x : -1, y : 0, blur : 0, spread : 0 }
+          { color : config.colors[el.type], x : 1, y : 0, blur : 0, spread : 0 },
+          { color : config.colors[el.type], x : -1, y : 0, blur : 0, spread : 0 }
         ];
       }
 
@@ -265,19 +293,12 @@ export default function () {
     }
 
     gridGroup.adjustToFit();
-
-    getWebview(webviewIdentifier).close();
-
-  });
-
-  browserWindow.loadURL(require('../resources/generate-grid.html'))
 }
 
-// When the plugin is shutdown by Sketch (for example when the user disable the plugin)
-// we need to close the webview if it's open
-export function onShutdown() {
-  const existingWebview = getWebview(webviewIdentifier)
-  if (existingWebview) {
-    existingWebview.close()
-  }
-}
+export function makeGridOne()       { generateGrid({...defaults, columns: "1" }); }
+export function makeGridTwo()       { generateGrid({...defaults, columns: "2" }); }
+export function makeGridThree()     { generateGrid({...defaults, columns: "3" }); }
+export function makeGridFour()      { generateGrid({...defaults, columns: "4" }); }
+export function makeGridSix()       { generateGrid({...defaults, columns: "6" }); }
+export function makeGridEightFour() { generateGrid({...defaults, columns: "8,4" }); }
+export function makeGridThreeNine() { generateGrid({...defaults, columns: "3,9" }); }
