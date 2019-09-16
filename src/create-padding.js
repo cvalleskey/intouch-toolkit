@@ -34,15 +34,53 @@ function loadLocalImage(filePath) {
     return NSImage.alloc().initWithContentsOfFile(filePath);
 }
 
+export default function () {
+
+  const options = {
+    identifier: webviewIdentifier,
+    width: 480,
+    height: 350,
+    show: false,
+    title: 'Make Padding',
+    titleBarStyle: 'hiddenInset'
+  }
+
+  const browserWindow = new BrowserWindow(options)
+
+  // only show the window when the page has loaded to avoid a white flash
+  browserWindow.once('ready-to-show', () => {
+
+    var document = Document.getSelectedDocument();
+    let page = document.selectedPage;
+    var selection = document.selectedLayers;
+    var selected = (selection.length == 1)? selection.layers[0] : false;
+
+    if(selected) {
+      browserWindow.show()
+    } else {
+      getWebview(webviewIdentifier).close();
+      UI.message('Select a layer or artboard to generate a grid.');
+    }
+  })
+
+  const webContents = browserWindow.webContents
+  webContents.on('makePadding', s => {
+    var size = [16,32]; // Other accepted values: 16, [16, 32, 24], [16, 24, 32, 48]
+    makePadding(size);
+    getWebview(webviewIdentifier).close();
+  });
+
+  browserWindow.loadURL(require('../resources/make-padding.html'))
+}
+
 function makePadding(size) {
-
-
 
   if (selectedLayers.length) {
 
     selectedLayers.forEach(function (layer, i) {
 
-      var parent = layer.getParentArtboard();
+      //var parent = layer.getParentArtboard();
+      var parent = layer.parent;
       if(parent == undefined) {
         parent = page;
       }

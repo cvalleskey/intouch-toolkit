@@ -4,19 +4,21 @@
   "icon": "icon.png",
   "commands": [
     {
-      "name": "Export Styleguide",
-      "identifier": "intouch-toolkit.styleguide.get-styleguide",
-      "script": "./styleguide.js",
-      "handlers": { "run": "exportStyleguide" }
+      "name": "Superscript ",
+      "identifier": "intouch-toolkit.auto-superscript",
+      "shortcut": "ctrl command =",
+      "script": "./auto-superscript.js",
+      "handlers": { "run": "autoSuperscript" }
     },
     {
-      "name": "Spacing Units",
-      "identifier": "intouch-toolkit.styleguide.generate-spacing",
-      "script": "./styleguide.js",
-      "handlers": { "run": "generateSpacing" }
+      "name": "Subscript ",
+      "identifier": "intouch-toolkit.auto-subscript",
+      "shortcut": "ctrl command -",
+      "script": "./auto-superscript.js",
+      "handlers": { "run": "autoSubscript" }
     },
     {
-      "name": "Type Scale",
+      "name": "Manage Text Styles...",
       "identifier": "intouch-toolkit.generate-type-scale",
       "script": "./generate-type-scale.js",
       "handlers": {
@@ -24,33 +26,6 @@
         "actions": {
           "Shutdown": "onShutdown"
         }
-      }
-    },
-    {
-      "name": "Color Range",
-      "identifier": "intouch-toolkit.styleguide.generate-colors",
-      "script": "./styleguide.js",
-      "handlers": { "run": "generateColors" }
-    },
-    {
-      "name": "Toggle Superscript",
-      "identifier": "intouch-toolkit.auto-superscript",
-      "shortcut": "ctrl command =",
-      "script": "./auto-superscript.js",
-      "handlers": {
-        "run": "autoSuperscript",
-        "actions": {
-          "*": "onTextStyleUpdateBegin"
-        }
-      }
-    },
-    {
-      "name": "Toggle Subscript",
-      "identifier": "intouch-toolkit.auto-subscript",
-      "shortcut": "ctrl command -",
-      "script": "./auto-superscript.js",
-      "handlers": {
-        "run": "autoSubscript"
       }
     },
     {
@@ -72,14 +47,6 @@
       }
     },
     {
-      "name": "Create Typography Scale",
-      "identifier": "intouch-toolkit.create-typography-scale",
-      "script": "./typography.js",
-      "handlers": {
-        "run": "updateFontScales"
-      }
-    },
-    {
       "name": "Generate grid...",
       "identifier": "intouch-toolkit.generate-grid",
       "shortcut": "ctrl command g",
@@ -89,6 +56,64 @@
         "actions": {
           "Shutdown": "onShutdown"
         }
+      }
+    },
+    {
+      "name": "One",
+      "identifier": "intouch-toolkit.generate-grid.one",
+      "shortcut": "control option command 1",
+      "script": "./generate-grid.js",
+      "handlers": { "run": "makeGridOne" }
+    },
+    {
+      "name": "Two",
+      "identifier": "intouch-toolkit.generate-grid.two",
+      "shortcut": "control option command 2",
+      "script": "./generate-grid.js",
+      "handlers": { "run": "makeGridTwo" }
+    },
+    {
+      "name": "Three",
+      "identifier": "intouch-toolkit.generate-grid.three",
+      "shortcut": "control option command 3",
+      "script": "./generate-grid.js",
+      "handlers": { "run": "makeGridThree" }
+    },
+    {
+      "name": "Four",
+      "identifier": "intouch-toolkit.generate-grid.four",
+      "shortcut": "control option command 4",
+      "script": "./generate-grid.js",
+      "handlers": { "run": "makeGridFour" }
+    },
+    {
+      "name": "Six",
+      "identifier": "intouch-toolkit.generate-grid.six",
+      "shortcut": "control option command 6",
+      "script": "./generate-grid.js",
+      "handlers": { "run": "makeGridSix" }
+    },
+    {
+      "name": "Eight + Four",
+      "identifier": "intouch-toolkit.generate-grid.eight-four",
+      "shortcut": "control option command 8",
+      "script": "./generate-grid.js",
+      "handlers": { "run": "makeGridEightFour" }
+    },
+    {
+      "name": "Three + Nine",
+      "identifier": "intouch-toolkit.generate-grid.three-nine",
+      "shortcut": "control option command 9",
+      "script": "./generate-grid.js",
+      "handlers": { "run": "makeGridThreeNine" }
+    },
+    {
+      "name": "Make padding...",
+      "identifier": "intouch-toolkit.create-padding",
+      "script": "./create-padding.js",
+      "handlers": {
+        "run": "onRun",
+        "actions": { "Shutdown": "onShutdown" }
       }
     },
     {
@@ -146,6 +171,32 @@
       }
     },
     {
+      "name": "Export Styleguide",
+      "identifier": "intouch-toolkit.styleguide.get-styleguide",
+      "script": "./styleguide.js",
+      "handlers": { "run": "exportStyleguide" }
+    },
+    {
+      "name": "Spacing Units",
+      "identifier": "intouch-toolkit.styleguide.generate-spacing",
+      "script": "./styleguide.js",
+      "handlers": { "run": "generateSpacing" }
+    },
+    {
+      "name": "Color Range",
+      "identifier": "intouch-toolkit.styleguide.generate-colors",
+      "script": "./styleguide.js",
+      "handlers": { "run": "generateColors" }
+    },
+    {
+      "name": "Create Typography Scale",
+      "identifier": "intouch-toolkit.create-typography-scale",
+      "script": "./typography.js",
+      "handlers": {
+        "run": "updateFontScales"
+      }
+    },
+    {
       "name": "Export to PDF...",
       "identifier": "intouch-toolkit.export-jpgs-to-pdf",
       "shortcut": "command option shift e",
@@ -168,16 +219,31 @@
       {
         "title": "Text Styles",
         "items": [
+          "intouch-toolkit.generate-type-scale",
+          "-",
           "intouch-toolkit.update-formatted-text-style",
           "intouch-toolkit.sync-library-text-styles"
         ]
       },
-      "-",
-      "intouch-toolkit.generate-grid",
-      "intouch-toolkit.generate-type-scale",
       {
-        "title": "Create Padding",
+        "title": "Layout",
         "items": [
+          "intouch-toolkit.generate-grid",
+          "-",
+          "intouch-toolkit.generate-grid.one",
+          "intouch-toolkit.generate-grid.two",
+          "intouch-toolkit.generate-grid.three",
+          "intouch-toolkit.generate-grid.four",
+          "intouch-toolkit.generate-grid.six",
+          "intouch-toolkit.generate-grid.eight-four",
+          "intouch-toolkit.generate-grid.three-nine"
+        ]
+      },
+      {
+        "title": "Padding",
+        "items": [
+          "intouch-toolkit.create-padding",
+          "-",
           "intouch-toolkit.create-padding.xsmall",
           "intouch-toolkit.create-padding.small",
           "intouch-toolkit.create-padding.medium",

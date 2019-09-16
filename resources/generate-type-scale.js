@@ -5,17 +5,13 @@ document.addEventListener('contextmenu', (e) => {
 
 // call the plugin from the webview
 document.getElementById('button').addEventListener('click', () => {
-  //window.postMessage('nativeLog', 'Called from the webview')
-  var elColumns = document.getElementById('columns');
-  var elBreakpoint = document.getElementById('breakpoint');
+  window.postMessage('nativeLog', 'Called from the webview')
+  var elStyleObject = document.getElementById('styleObject');
+
+  //document.getElementById('sharedTextStyles').innerHTML = elStyleObject.value;
 
   window.postMessage('makeTypeScale', {
-    // columns : elColumns.options[elColumns.selectedIndex].value,
-    // breakpoint : elBreakpoint.options[elBreakpoint.selectedIndex].value,
-    // gutter : document.getElementById('gutter').checked,
-    // gutterSize : document.getElementById('gutterSize').value,
-    // margin : document.getElementById('margin').checked,
-    // marginSize : document.getElementById('marginSize').value
+    styles : JSON.parse(elStyleObject.value)
   });
 })
 
@@ -25,5 +21,8 @@ window.setRandomNumber = (randomNumber) => {
 }
 
 window.getSharedTextStyles = (sharedTextStyles) => {
-  document.getElementById('sharedTextStyles').innerHTML = sharedTextStyles.styles.toString()
+  window.postMessage('nativeLog', sharedTextStyles)
+  if(sharedTextStyles.length) {
+    document.getElementById('styleObject').innerHTML = JSON.stringify(sharedTextStyles,null,'\t')
+  }
 }
