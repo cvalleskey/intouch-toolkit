@@ -14,9 +14,9 @@ document.getElementById('button').addEventListener('click', () => {
   window.postMessage('makeGrid', {
     columns : elColumns.options[elColumns.selectedIndex].value,
     breakpoint : elBreakpoint.options[elBreakpoint.selectedIndex].value,
-    gutter : document.getElementById('gutter').checked,
+    gutter : document.getElementById('gutter').checked? true : false,
     gutterSize : document.getElementById('gutterSize').value,
-    margin : document.getElementById('margin').checked,
+    margin : document.getElementById('margin').checked? true : false,
     marginSize : document.getElementById('marginSize').value
   });
 })

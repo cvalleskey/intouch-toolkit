@@ -94,6 +94,9 @@ function generateGrid(settings) {
 
   var settings = {...defaults, ...settings };
 
+  log('settings')
+  log(settings)
+
   var document = Document.getSelectedDocument();
   let page = document.selectedPage;
   var selection = document.selectedLayers;
@@ -129,31 +132,31 @@ function generateGrid(settings) {
   }
 
   // Calculate margin width based on number or percent
-  var pixelMarginSize = (margin == 0)? 0 : marginSize;
-  if(typeof marginSize == "string" && marginSize.includes('%')) {
-    pixelMarginSize = breakpoint * (marginSize.replace("%", "") / 100);
+  if(margin == 0) {
+    var pixelMarginSize = 0;
   } else {
-    pixelMarginSize = parseFloat(marginSize, 10);
+    if(typeof marginSize == "string" && marginSize.includes('%')) {
+      var pixelMarginSize = breakpoint * (marginSize.replace("%", "") / 100);
+    } else {
+      var pixelMarginSize = parseFloat(marginSize, 10);
+    }
   }
+
+  log("pixelMarginSize")
+  log(pixelMarginSize)
 
   // Calculate main container space, minus margin on both sides
   let containerFinalWidth = breakpoint - (pixelMarginSize * 2);
 
   // Calculate single gutter width
-  // if(typeof gutterSize == "string") {
-  //   var pixelGutterSize = containerFinalWidth * (gutterSize.replace("%", "") / 100);
-  // } else {
-  //   var pixelGutterSize = gutterSize;
-  // }
-  // if(gutter == 0) {
-  //   pixelGutterSize = 0;
-  // }
-
-  var pixelGutterSize = (margin == 0)? 0 : marginSize;
-  if(typeof gutterSize == "string" && gutterSize.includes('%')) {
-    pixelGutterSize = containerFinalWidth * (gutterSize.replace("%", "") / 100);
+  if(gutter == 0) {
+    var pixelGutterSize = 0;
   } else {
-    pixelGutterSize = parseFloat(gutterSize, 10);
+    if(typeof gutterSize == "string" && gutterSize.includes('%')) {
+      var pixelGutterSize = breakpoint * (gutterSize.replace("%", "") / 100);
+    } else {
+      var pixelGutterSize = parseFloat(gutterSize, 10);
+    }
   }
 
   // Calculate single column width
