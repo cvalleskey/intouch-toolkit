@@ -92,6 +92,11 @@ export function onShutdown() {
 
 function generateGrid(settings) {
 
+    var settings = {...defaults, ...settings };
+
+    log('settings')
+    log(settings)
+
     var document = Document.getSelectedDocument();
     let page = document.selectedPage;
     var selection = document.selectedLayers;
@@ -113,7 +118,7 @@ function generateGrid(settings) {
     if(settings.breakpoint == "auto") {
       var breakpoint = settings.breakpoint;
     } else {
-      var breakpoint = Number(settings.breakpoint);
+      var breakpoint = parseInt(settings.breakpoint, 10);
     }
 
     if(selected) {
@@ -128,8 +133,10 @@ function generateGrid(settings) {
 
     // Calculate margin width based on number or percent
     var pixelMarginSize = marginSize;
-    if(typeof marginSize == "string") {
+    if(typeof marginSize == "string" && marginSize.includes('%')) {
       pixelMarginSize = breakpoint * (marginSize.replace("%", "") / 100);
+    } else {
+      pixelMarginSize = parseFloat(marginSize, 10);
     }
     if(margin == 0) {
       pixelMarginSize = 0;
@@ -295,10 +302,10 @@ function generateGrid(settings) {
     gridGroup.adjustToFit();
 }
 
-export function makeGridOne()       { generateGrid({...defaults, columns: "1" }); }
-export function makeGridTwo()       { generateGrid({...defaults, columns: "2" }); }
-export function makeGridThree()     { generateGrid({...defaults, columns: "3" }); }
-export function makeGridFour()      { generateGrid({...defaults, columns: "4" }); }
-export function makeGridSix()       { generateGrid({...defaults, columns: "6" }); }
-export function makeGridEightFour() { generateGrid({...defaults, columns: "8,4" }); }
-export function makeGridThreeNine() { generateGrid({...defaults, columns: "3,9" }); }
+export function makeGridOne()       { generateGrid({ columns: "1" }); }
+export function makeGridTwo()       { generateGrid({ columns: "2" }); }
+export function makeGridThree()     { generateGrid({ columns: "3" }); }
+export function makeGridFour()      { generateGrid({ columns: "4" }); }
+export function makeGridSix()       { generateGrid({ columns: "6" }); }
+export function makeGridEightFour() { generateGrid({ columns: "8,4" }); }
+export function makeGridThreeNine() { generateGrid({ columns: "3,9" }); }
