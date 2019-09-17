@@ -129,31 +129,35 @@ function generateGrid(settings) {
   }
 
   // Calculate margin width based on number or percent
-  var pixelMarginSize = marginSize;
+  var pixelMarginSize = (margin == 0)? 0 : marginSize;
   if(typeof marginSize == "string" && marginSize.includes('%')) {
     pixelMarginSize = breakpoint * (marginSize.replace("%", "") / 100);
   } else {
     pixelMarginSize = parseFloat(marginSize, 10);
-  }
-  if(margin == 0) {
-    pixelMarginSize = 0;
   }
 
   // Calculate main container space, minus margin on both sides
   let containerFinalWidth = breakpoint - (pixelMarginSize * 2);
 
   // Calculate single gutter width
-  if(typeof gutterSize == "string") {
-    var pixelGutterSize = containerFinalWidth * (gutterSize.replace("%", "") / 100);
+  // if(typeof gutterSize == "string") {
+  //   var pixelGutterSize = containerFinalWidth * (gutterSize.replace("%", "") / 100);
+  // } else {
+  //   var pixelGutterSize = gutterSize;
+  // }
+  // if(gutter == 0) {
+  //   pixelGutterSize = 0;
+  // }
+
+  var pixelGutterSize = (margin == 0)? 0 : marginSize;
+  if(typeof gutterSize == "string" && gutterSize.includes('%')) {
+    pixelGutterSize = containerFinalWidth * (gutterSize.replace("%", "") / 100);
   } else {
-    var pixelGutterSize = gutterSize;
-  }
-  if(gutter == 0) {
-    pixelGutterSize = 0;
+    pixelGutterSize = parseFloat(gutterSize, 10);
   }
 
   // Calculate single column width
-  let pixelColumnWidth = parseFloat(((containerFinalWidth - (pixelGutterSize)*(settings.columnCount-1)) / settings.columnCount).toFixed(2), 10);
+  let pixelColumnWidth = parseFloat(((containerFinalWidth - (pixelGutterSize)*(settings.columnCount-1)) / settings.columnCount).toFixed(4), 10);
 
   var columnsArray = [];
 
