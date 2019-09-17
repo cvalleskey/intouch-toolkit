@@ -94,8 +94,8 @@ function generateGrid(settings) {
 
   var settings = {...defaults, ...settings };
 
-  log('settings')
-  log(settings)
+  // log('settings')
+  // log(settings)
 
   var document = Document.getSelectedDocument();
   let page = document.selectedPage;
@@ -141,9 +141,6 @@ function generateGrid(settings) {
       var pixelMarginSize = parseFloat(marginSize, 10);
     }
   }
-
-  log("pixelMarginSize")
-  log(pixelMarginSize)
 
   // Calculate main container space, minus margin on both sides
   let containerFinalWidth = breakpoint - (pixelMarginSize * 2);
@@ -241,24 +238,24 @@ function generateGrid(settings) {
     }
   }
 
-  if(selected.type == "Artboard") {
-    grids.parent = selected;
-    grids.frame.x = (selected.frame.width - breakpoint) / 2;
-    // gridsettings.frame.y = 0;
-  } else if(selected.type == "ShapePath") {
-    if(breakpoint >= selected.frame.width) {
-      grids.frame.x = selected.frame.x;
-    } else {
-      grids.frame.x = (selected.frame.width - breakpoint) / 2;
-    }
-    grids.frame.y = selected.frame.y;
-    if(selected.getParentArtboard() == undefined) {
-      grids.parent = page;
-    } else {
-      //gridsettings.parent = selected.getParentArtboard();
-      grids.parent = selected.parent;
-    }
+  var _x = 0;
+  var _y = 0;
+  var parent = (selected.type == "Artboard")? selected : selected.parent;
+
+  if(parent.type == "Group") {
+    _x += selected.frame.x;
   }
+  if(selected.parent.type == "Page" && selected.type != "Artboard") {
+    _x = selected.frame.x;
+    _y = selected.frame.y;
+  }
+  if(breakpoint <= selected.frame.width) {
+    _x += (selected.frame.width - breakpoint) / 2;
+  }
+
+  grids.parent = parent;
+  grids.frame.x = _x;
+  grids.frame.y = _y;
 
   var gridGroup = new Document.Group(grids);
 
@@ -289,7 +286,6 @@ function generateGrid(settings) {
             patternType : Document.Style.PatternFillType.Tile,
             tileScale : 0.25,
             image : { "base64": config.patterns[el.type]}
-            //image : loadLocalImage("/Users/chrisettings.valleskey/Documents/github/intouch-toolkit/intouch-toolkit.sketchplugin/Contents/Resources/shade-" + el.type + ".png"),
           }
         }
       ];
