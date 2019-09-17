@@ -157,7 +157,7 @@ function generateGrid(settings) {
   }
 
   // Calculate single column width
-  let pixelColumnWidth = parseFloat(((containerFinalWidth - (pixelGutterSize)*(settings.columnCount-1)) / settings.columnCount).toFixed(4), 10);
+  let pixelColumnWidth = parseFloat(((containerFinalWidth - (pixelGutterSize)*(settings.columnCount-1)) / settings.columnCount), 10);
 
   var columnsArray = [];
 
@@ -218,7 +218,7 @@ function generateGrid(settings) {
     // Add column
     columnsArray.push({
       type: 'column',
-      width: Number(((column-1) * pixelGutterSize + column * pixelColumnWidth).toFixed(2)) // pixelMarginSize
+      width: parseFloat(((column-1) * pixelGutterSize + column * pixelColumnWidth), 10) // pixelMarginSize
     });
 
     // Add outer margin
