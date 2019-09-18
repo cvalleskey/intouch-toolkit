@@ -25,7 +25,7 @@ export default function () {
     identifier: webviewIdentifier,
     webpage: "generate-type-scale.html",
     width: 480,
-    height: 350,
+    height: 370,
     show: false,
     title: 'Generate Type Scale',
     titleBarStyle: 'hiddenInset'
