@@ -2,6 +2,7 @@ import BrowserWindow from 'sketch-module-web-view'
 import { getWebview } from 'sketch-module-web-view/remote'
 import UI from 'sketch/ui'
 import Document from 'sketch/dom'
+import Settings from 'sketch/settings'
 
 const webviewIdentifier = 'intouch-toolkit.webview'
 
@@ -17,15 +18,18 @@ const config = {
   }
 }
 
-const defaults = {
+var storedSettings = Settings.settingForKey('intouch-toolkit.generate-grid');
+
+var defaults = {
   columns : 3,
   columnCount: 12,
   breakpoint : "auto",
   gutter : true,
-  gutterSize : '2%',
+  gutterSize : '10%',
   margin : true,
   marginSize : 20,
-  containerWidth : 1180
+  containerWidth : 1180,
+  ...storedSettings
 }
 
 function loadLocalImage(filePath) {
@@ -42,8 +46,8 @@ export default function () {
     width: 480,
     height: 350,
     show: false,
-    title: 'Generate Grid',
-    titleBarStyle: 'hiddenInset'
+    title: 'Generate Columns',
+    // titleBarStyle: 'hiddenInset'
   }
 
   const browserWindow = new BrowserWindow(options)
@@ -57,6 +61,9 @@ export default function () {
     var selected = (selection.length == 1)? selection.layers[0] : false;
 
     if(selected) {
+      browserWindow.webContents
+        .executeJavaScript(`getStoredSettings(${JSON.stringify(defaults)})`)
+        .then(res => {})
       browserWindow.show()
     } else {
       getWebview(webviewIdentifier).close();
@@ -72,10 +79,10 @@ export default function () {
   })
 
   webContents.on('makeGrid', s => {
-
+    log('making grid')
+    log(s)
     generateGrid(s);
     getWebview(webviewIdentifier).close();
-
   });
 
   browserWindow.loadURL(require('../resources/generate-grid.html'))
@@ -92,10 +99,9 @@ export function onShutdown() {
 
 function generateGrid(settings) {
 
-  var settings = {...defaults, ...settings };
+  Settings.setSettingForKey('intouch-toolkit.generate-grid', settings)
 
-  // log('settings')
-  // log(settings)
+  var settings = {...defaults, ...settings };
 
   var document = Document.getSelectedDocument();
   let page = document.selectedPage;
@@ -194,6 +200,8 @@ function generateGrid(settings) {
     columns = [8,4];
   } else if(columns == "3,9") {
     columns = [3,9];
+  } else if(columns == "12") {
+    columns = [1,1,1,1,1,1,1,1,1,1,1,1];
   }
 
   for(var i = 0; i < columns.length; i++) {
@@ -231,7 +239,7 @@ function generateGrid(settings) {
   }
 
   var grids = {
-    name : '📐 Grid',
+    name : '📐 Columns',
     frame : {
       width : breakpoint,
       height : (selection.length == 1)? selected.frame.height : 100
@@ -242,7 +250,7 @@ function generateGrid(settings) {
   var _y = 0;
   var parent = (selected.type == "Artboard")? selected : selected.parent;
 
-  if(selected.getParentArtboard()) {
+  if(selected.getParentArtboard() && selected.getParentArtboard().id == selected.parent.id) {
     if(parent.type == "Artboard") {
       _x = selected.frame.x;
       _y = selected.frame.y;
