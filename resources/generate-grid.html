@@ -7,7 +7,7 @@
 </head>
 <body>
   <section>
-    <div class="field">
+    <!-- <div class="field">
       <label for="breakpoint">Breakpoint</label>
       <select id="breakpoint" name="breakpoint">
         <option value="auto" selected>Auto</option>
@@ -21,34 +21,35 @@
         <option value="1440">Desktop (1440px)</option>
         <option value="1920">Desktop Wide (1920px)</option>
       </select>
-    </div>
+    </div> -->
     <div class="field">
-      <label># of Columns</label>
+      <label>Number of Columns</label>
       <select id="columns">
         <option value="1">1 Column</option>
         <option value="2">2 Columns</option>
-        <option value="3" selected>3 Columns</option>
+        <option value="3">3 Columns</option>
         <option value="4">4 Columns</option>
         <option value="6">6 Columns</option>
+        <option value="12">12 Columns</option>
         <option value="8,4">8 Columns + 4 Columns</option>
         <option value="3,9">3 Columns + 9 Columns</option>
       </select>
     </div>
     <div class="field">
       <label for="gutter" title="Render a gutter between columns">Gutter</label>
-      <input name="gutter" id="gutter" type="checkbox" checked />
+      <input name="gutter" id="gutter" type="checkbox" />
     </div>
     <div class="field">
       <label for="gutter" title="Render a gutter between columns">Gutter Size</label>
-      <input name="gutterSize" id="gutterSize" type="text" value="2%" />
+      <input name="gutterSize" id="gutterSize" type="text" value="" />
     </div>
     <div class="field">
       <label for="margin">Margin</label>
-      <input name="margin" id="margin" type="checkbox" checked />
+      <input name="margin" id="margin" type="checkbox" />
     </div>
     <div class="field">
       <label for="margin">Margin Size</label>
-      <input name="marginSize" id="marginSize" type="text" value="20" />
+      <input name="marginSize" id="marginSize" type="text" value="" />
     </div>
   </section>
   <button id="button">Generate</button>

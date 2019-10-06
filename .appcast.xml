@@ -2,6 +2,12 @@
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
     <item>
+      <enclosure url="https://github.com/cvalleskey/intouch-toolkit/releases/download/v0.7.8/intouch-toolkit.sketchplugin.zip" sparkle:version="0.7.8"/>
+    </item>
+    <item>
+      <enclosure url="https://github.com/cvalleskey/intouch-toolkit/releases/download/v0.7.7/intouch-toolkit.sketchplugin.zip" sparkle:version="0.7.7"/>
+    </item>
+    <item>
       <enclosure url="https://github.com/cvalleskey/intouch-toolkit/releases/download/v0.7.6/intouch-toolkit.sketchplugin.zip" sparkle:version="0.7.6"/>
     </item>
     <item>

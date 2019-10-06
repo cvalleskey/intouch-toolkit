@@ -47,7 +47,7 @@
       }
     },
     {
-      "name": "Generate grid...",
+      "name": "Generate columns...",
       "identifier": "intouch-toolkit.generate-grid",
       "shortcut": "ctrl command g",
       "script": "./generate-grid.js",
@@ -226,7 +226,7 @@
         ]
       },
       {
-        "title": "Layout",
+        "title": "Columns",
         "items": [
           "intouch-toolkit.generate-grid",
           "-",
