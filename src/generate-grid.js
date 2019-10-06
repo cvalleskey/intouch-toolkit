@@ -25,7 +25,7 @@ var defaults = {
   columnCount: 12,
   breakpoint : "auto",
   gutter : true,
-  gutterSize : '10%',
+  gutterSize : '2%',
   margin : true,
   marginSize : 20,
   containerWidth : 1180,
