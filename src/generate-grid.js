@@ -248,28 +248,25 @@ function generateGrid(settings) {
 
   var _x = 0;
   var _y = 0;
-  var parent = (selected.type == "Artboard")? selected : selected.parent;
 
-  if(selected.getParentArtboard() && selected.getParentArtboard().id == selected.parent.id) {
-    if(parent.type == "Artboard") {
-      _x = selected.frame.x;
-      _y = selected.frame.y;
-    }
-  } else if(selected.type != "Artboard") {
+  if(selected.type == "Artboard") {
+    grids.parent = selected;
+  } else {
+    grids.parent = selected.parent.id? selected.parent : page;
     _x = selected.frame.x;
     _y = selected.frame.y;
   }
-
   if(selected.frame.width > breakpoint) {
     _x += (selected.frame.width - breakpoint) / 2;
   }
 
-  grids.parent = parent;
   grids.frame.x = _x;
   grids.frame.y = _y;
 
 
   var gridGroup = new Document.Group(grids);
+
+  gridGroup.index = selected.index + 1;
 
   var _x = 0;
   var _y = 0;
