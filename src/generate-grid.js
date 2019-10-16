@@ -156,7 +156,7 @@ function generateGrid(settings) {
     var pixelGutterSize = 0;
   } else {
     if(typeof gutterSize == "string" && gutterSize.includes('%')) {
-      var pixelGutterSize = breakpoint * (gutterSize.replace("%", "") / 100);
+      var pixelGutterSize = (breakpoint - pixelMarginSize * 2) * (gutterSize.replace("%", "") / 100);
     } else {
       var pixelGutterSize = parseFloat(gutterSize, 10);
     }
