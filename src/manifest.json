@@ -3,6 +3,49 @@
   "bundleVersion": 1,
   "icon": "icon.png",
   "commands": [
+
+        {
+      "name": "Left",
+      "identifier": "intouch-toolkit.align.left",
+      "shortcut": "ctrl command ←",
+      "script": "./align.js",
+      "handlers": { "run": "left" }
+    },
+    {
+      "name": "Horizontally",
+      "identifier": "intouch-toolkit.align.horizontally",
+      "shortcut": "ctrl command /",
+      "script": "./align.js",
+      "handlers": { "run": "horizontally" }
+    },
+    {
+      "name": "Right",
+      "identifier": "intouch-toolkit.align.right",
+      "shortcut": "ctrl command →",
+      "script": "./align.js",
+      "handlers": { "run": "right" }
+    },
+    {
+      "name": "Top",
+      "identifier": "intouch-toolkit.align.top",
+      "shortcut": "ctrl command ↑",
+      "script": "./align.js",
+      "handlers": { "run": "top" }
+    },
+    {
+      "name": "Vertically",
+      "identifier": "intouch-toolkit.align.vertically",
+      "shortcut": "ctrl command .",
+      "script": "./align.js",
+      "handlers": { "run": "vertically" }
+    },
+    {
+      "name": "Bottom",
+      "identifier": "intouch-toolkit.align.bottom",
+      "shortcut": "ctrl command ↓",
+      "script": "./align.js",
+      "handlers": { "run": "bottom" }
+    },
     {
       "name": "Superscript ",
       "identifier": "intouch-toolkit.auto-superscript",
@@ -217,12 +260,14 @@
       "intouch-toolkit.auto-subscript",
       "-",
       {
-        "title": "Text Styles",
+        "title": "Align",
         "items": [
-          "intouch-toolkit.generate-type-scale",
-          "-",
-          "intouch-toolkit.update-formatted-text-style",
-          "intouch-toolkit.sync-library-text-styles"
+          "intouch-toolkit.align.left",
+          "intouch-toolkit.align.horizontally",
+          "intouch-toolkit.align.right",
+          "intouch-toolkit.align.top",
+          "intouch-toolkit.align.vertically",
+          "intouch-toolkit.align.bottom"
         ]
       },
       {
@@ -240,7 +285,7 @@
         ]
       },
       {
-        "title": "Padding",
+        "title": "Spacing",
         "items": [
           "intouch-toolkit.create-padding",
           "-",
@@ -250,6 +295,15 @@
           "intouch-toolkit.create-padding.large",
           "intouch-toolkit.create-padding.xlarge",
           "intouch-toolkit.create-padding.xxlarge"
+        ]
+      },
+      {
+        "title": "Text Styles",
+        "items": [
+          "intouch-toolkit.generate-type-scale",
+          "-",
+          "intouch-toolkit.update-formatted-text-style",
+          "intouch-toolkit.sync-library-text-styles"
         ]
       }
     ]
