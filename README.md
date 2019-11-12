@@ -8,8 +8,12 @@
 
 ### Features
 
-- __Superscript__: Make and edit superscripts with ease. Supports Text Styles and use with Shared Libraries.
+- __Superscript/Subscript__: Make and edit superscripts with ease. Supports Text Styles and use with Shared Libraries.
 
-- __Generate Grid__: Creates a series of layers which match website grid specs exactly at any device size. Supports a defined list of column counts, with percentages or pixel values allowed for column gutters and margins.
+- __Align__: Use the keyboard shortcuts listed to quickly align selected objects.
 
-- __Create Padding__: Creates a layer around selected layer(s) which define a set padding within the bounds.
+- __Columns__: Define columns for layout purposes. Use pixel values or percentages for precise control.
+
+- __Spacing__: Defines padding within selected layer(s) for layout purposes.
+
+- __Text Styles__: Sync local and remote library text styles while preserving formatting like superscripts. __In testing:__ Define a type scale with automatic Text Style creation based on device sizes.
