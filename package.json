@@ -1,6 +1,6 @@
 {
   "name": "intouch-toolkit",
-  "version": "0.7.12",
+  "version": "0.8.0-0",
   "engines": {
     "sketch": ">=3.0"
   },
