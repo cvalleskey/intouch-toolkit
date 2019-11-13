@@ -12,9 +12,9 @@ document.getElementById('button').addEventListener('click', () => {
 
   window.postMessage('makeGrid', {
     columns : elColumns.options[elColumns.selectedIndex].value,
-    gutter : document.getElementById('gutter').checked? true : false,
+    gutter : true,
     gutterSize : document.getElementById('gutterSize').value,
-    margin : document.getElementById('margin').checked? true : false,
+    margin : true,
     marginSize : document.getElementById('marginSize').value
   });
 })
@@ -27,8 +27,8 @@ window.getStoredSettings = (settings) => {
   var elColumns = document.getElementById('columns');
 
   elColumns.value = settings.columns;
-  document.getElementById('gutter').checked = settings.gutter;
+  //document.getElementById('gutter').checked = settings.gutter;
   document.getElementById('gutterSize').value = settings.gutterSize;
-  document.getElementById('margin').checked = settings.margin;
+  //document.getElementById('margin').checked = settings.margin;
   document.getElementById('marginSize').value = settings.marginSize;
 }

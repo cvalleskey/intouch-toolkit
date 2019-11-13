@@ -43,11 +43,10 @@ export default function () {
 
   const options = {
     identifier: webviewIdentifier,
-    width: 480,
-    height: 350,
+    width: 400,
+    height: 176,
     show: false,
-    title: 'Generate Columns',
-    // titleBarStyle: 'hiddenInset'
+    title: 'Generate Columns'
   }
 
   const browserWindow = new BrowserWindow(options)

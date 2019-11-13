@@ -1,14 +1,10 @@
-/* some default styles to make the view more native like */
-
 html {
   box-sizing: border-box;
   background: transparent;
-
-  /* Prevent the page to be scrollable */
   overflow: hidden;
-
-  /* Force the default cursor, even on text */
   cursor: default;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
 }
 
 *, *:before, *:after {
@@ -16,8 +12,6 @@ html {
   margin: 0;
   padding: 0;
   position: relative;
-
-  /* Prevent the content from being selectionable */
   -webkit-user-select: none;
   user-select: none;
 }
@@ -25,17 +19,25 @@ html {
 input, textarea {
   -webkit-user-select: auto;
   user-select: auto;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  line-height: 1.5;
 }
 
-body {
-  padding: 2rem 1rem 1rem;
-  background: #F0F2F9;
-  color: #071d49;
-  font: 16px/1.5 'Roboto', sans-serif;
-  -webkit-font-smoothing: antialiased;
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
 }
 
-.field {
+select {
+  height: 2rem;
+  border: none;
+  border-radius: 0;
+  -webkit-appearance: none;
+  padding: 0 0.75rem;
+}
+
+/* .field {
   display: flex;
   width: 100%;
   margin: 0.5rem 0;
@@ -75,10 +77,80 @@ button {
   width: 100%;
   margin: 1rem 0;
   border-radius: 0.5rem;
+} */
+
+label {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.75rem;
 }
 
 .warning {
   font-size: 0.75em;
   font-weight: bold;
   margin-bottom: 0.5em;
+}
+
+.panel {
+  padding: 1rem;
+  background: linear-gradient(-45deg, #182628, #223032);
+  color: #FFF;
+  font: 16px/1.25 -apple-system, sans-serif;
+}
+
+.fields {
+  display: flex;
+  margin: 0 -0.25rem;
+}
+
+.fields > * {
+  margin: 0 0.25rem;
+  flex: 1 0 40px;
+}
+
+.field {
+  min-width: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.field__label {
+  display: block;
+  margin: 0.25rem 0;
+  color: #8D9495;
+}
+
+.field__input {
+  background: rgba(0,0,0,0.1);
+  color: #FFF;
+  border-bottom: 1px solid #536977;
+  font-size: 1rem;
+  height: 2.5rem;
+}
+
+.field__input:hover,
+.field__input:focus {
+  background-color: rgba(0,0,0,0.25);
+  border-color: #076D71;
+}
+
+.field__input:active {
+  border-color: #24B5AC;
+}
+
+.field__unit {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0;
+  height: 2.5rem;
+  align-items: center;
+  display: flex;
+  text-transform: uppercase;
+  color: #8D9495;
+  font-size: 0.825rem;
+  cursor: pointer;
+}
+
+.button {
+
 }
