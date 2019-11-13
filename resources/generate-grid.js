@@ -3,32 +3,42 @@ document.addEventListener('contextmenu', (e) => {
   e.preventDefault()
 })
 
-document.getElementById('button').focus();
+//document.getElementById('button').focus();
 
 // call the plugin from the webview
 document.getElementById('button').addEventListener('click', () => {
-  //window.postMessage('nativeLog', 'Called from the webview')
-  var elColumns = document.getElementById('columns');
-
-  window.postMessage('makeGrid', {
-    columns : elColumns.options[elColumns.selectedIndex].value,
-    gutter : true,
-    gutterSize : document.getElementById('gutterSize').value,
-    margin : true,
-    marginSize : document.getElementById('marginSize').value
-  });
+  window.postMessage('nativeLog', 'Called from the webview')
+  // var elColumns = document.getElementById('columns');
+  //
+  // window.postMessage('makeGrid', {
+  //   columns : elColumns.options[elColumns.selectedIndex].value,
+  //   gutter : true,
+  //   gutterSize : Number(document.getElementById('gutterSize').value),
+  //   margin : true,
+  //   marginSize : Number(document.getElementById('marginSize').value)
+  // });
 })
 
 // call the wevbiew from the plugin
 window.getStoredSettings = (settings) => {
 
-  window.postMessage('nativeLog', settings);
+  return "yay";
 
-  var elColumns = document.getElementById('columns');
+  //window.postMessage('nativeLog', settings);
 
-  elColumns.value = settings.columns;
-  //document.getElementById('gutter').checked = settings.gutter;
-  document.getElementById('gutterSize').value = settings.gutterSize;
-  //document.getElementById('margin').checked = settings.margin;
-  document.getElementById('marginSize').value = settings.marginSize;
+  // var elColumns = document.getElementById('columns');
+  //
+  // elColumns.value = settings.columns;
+  // //document.getElementById('gutter').checked = settings.gutter;
+  //
+  // if(settings.gutterSize.includes('%')) {
+  //   document.getElementById('gutterSize').value = '%';
+  // }
+  // document.getElementById('gutterSize').value = parseInt(settings.gutterSize, 10);
+  //
+  // //document.getElementById('margin').checked = settings.margin;
+  // if(settings.marginSize.includes('%')) {
+  //   document.getElementById('marginSize').value = '%';
+  // }
+  // document.getElementById('marginSize').value = parseInt(settings.marginSize, 10);
 }

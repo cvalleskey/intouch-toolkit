@@ -46,7 +46,7 @@ export default function () {
     width: 400,
     height: 176,
     show: false,
-    title: 'Generate Columns'
+    title: 'Columns'
   }
 
   const browserWindow = new BrowserWindow(options)
@@ -59,10 +59,13 @@ export default function () {
     var selection = document.selectedLayers;
     var selected = (selection.length == 1)? selection.layers[0] : false;
 
+    browserWindow.show()
+
     if(selected) {
       browserWindow.webContents
         .executeJavaScript(`getStoredSettings(${JSON.stringify(defaults)})`)
-        .then(res => {})
+        .then(res => log(res))
+        .catch(error => log(error))
       browserWindow.show()
     } else {
       getWebview(webviewIdentifier).close();
@@ -84,6 +87,10 @@ export default function () {
     getWebview(webviewIdentifier).close();
   });
 
+  webContents.on('nativeLog', s => {
+    log(s)
+  });
+
   browserWindow.loadURL(require('../resources/generate-grid.html'))
 }
 
@@ -98,9 +105,12 @@ export function onShutdown() {
 
 function generateGrid(settings) {
 
-  Settings.setSettingForKey('intouch-toolkit.generate-grid', settings)
+  //Settings.setSettingForKey('intouch-toolkit.generate-grid', settings)
 
   var settings = {...defaults, ...settings };
+
+  log('generateGrid')
+  log(settings)
 
   var document = Document.getSelectedDocument();
   let page = document.selectedPage;

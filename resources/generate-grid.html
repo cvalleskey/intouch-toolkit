@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Generate Grid</title>
+  <title>Columns</title>
   <link rel="stylesheet" href="./style.css">
 </head>
 <body class="panel">
   <div class="fields">
     <div class="field">
       <label for="columns" class="field__label">Count</label>
-      <select id="columns" class="field__input field__input--select">
+      <select id="columns" class="field__input field__input--select" tabindex="1">
         <option value="1">1 Column</option>
         <option value="2">2 Columns</option>
         <option value="3">3 Columns</option>
@@ -21,17 +21,24 @@
       </select>
     </div>
     <div class="field">
-      <label for="columns" class="field__label">Gutter</label>
-      <input name="gutterSize" id="gutterSize" type="text" value="" class="field__input" />
-      <!-- <span class="field__unit">%</span> -->
+      <label for="gutterSize" class="field__label">Gutter</label>
+      <input name="gutterSize" id="gutterSize" type="number" value="" class="field__input" tabindex="2" />
+      <select id="gutterUnit" class="field__unit">
+        <option value="px">PX</option>
+        <option value="%">%</option>
+      </select>
     </div>
     <div class="field">
-      <label for="columns" class="field__label">Margin</label>
-      <input name="marginSize" id="marginSize" type="text" value="" class="field__input" />
-      <!-- <span class="field__unit">px</span> -->
+      <label for="marginSize" class="field__label">Margin</label>
+      <input name="marginSize" id="marginSize" type="number" value="" class="field__input" tabindex="3" />
+      <select id="marginUnit" class="field__unit">
+        <option value="px">PX</option>
+        <option value="%">%</option>
+      </select>
     </div>
   </div>
-  <button id="button" class="button">Generate</button>
+  <button id="button" class="button" tabindex="4">Generate</button>
+  <div id="output"></div>
   <script src="../generate-grid.js"></script>
 </body>
 </html>
