@@ -3,7 +3,13 @@ document.addEventListener('contextmenu', (e) => {
   e.preventDefault()
 })
 
-//document.getElementById('button').focus();
+document.addEventListener('keypress', function(e) {
+  if(e.keyCode == 13) {
+      document.getElementById('button').click();
+  }
+});
+
+document.getElementById('button').focus();
 
 // call the plugin from the webview
 document.getElementById('button').addEventListener('click', () => {

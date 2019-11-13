@@ -46,7 +46,7 @@ export default function () {
   const options = {
     identifier: webviewIdentifier,
     width: 400,
-    height: 176,
+    height: 172,
     show: false,
     title: 'Columns'
   }
@@ -66,18 +66,14 @@ export default function () {
     if(selected) {
 
       var selectedGridSettings = Settings.layerSettingForKey(selected, 'column-settings');
-      log('selectedGridSettings')
-      log(selectedGridSettings)
-
       if(selectedGridSettings) {
         defaults = { defaults, ...selectedGridSettings}
       }
 
       browserWindow.webContents
         .executeJavaScript(`getStoredSettings(${JSON.stringify(defaults)})`)
-        .then(res => log(res))
+        .then(res => browserWindow.show())
         .catch(error => log(error))
-      browserWindow.show()
     } else {
       getWebview(webviewIdentifier).close();
       UI.message('Select a layer or artboard to generate a grid.');
@@ -92,15 +88,13 @@ export default function () {
   })
 
   webContents.on('makeGrid', s => {
-    log('making grid')
-    log(s)
+    //log('making grid')
+    //log(s)
     generateGrid(s);
     getWebview(webviewIdentifier).close();
   });
 
-  webContents.on('nativeLog', s => {
-    log(s)
-  });
+  webContents.on('nativeLog', s => log(s));
 
   browserWindow.loadURL(require('../resources/generate-grid.html'))
 }
@@ -120,8 +114,8 @@ function generateGrid(settings) {
 
   var settings = {...defaults, ...settings };
 
-  log('generateGrid')
-  log(settings)
+  //log('generateGrid')
+  //log(settings)
 
   var document = Document.getSelectedDocument();
   let page = document.selectedPage;
