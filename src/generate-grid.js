@@ -25,10 +25,12 @@ var defaults = {
   columnCount: 12,
   breakpoint : "auto",
   gutter : true,
-  gutterSize : '2%',
+  gutterSize: 2,
+  gutterUnit: '%',
   margin : true,
   marginSize : 20,
-  containerWidth : 1180,
+  marginUnit: 'px',
+  containerMaxWidth : 1000000, /* 1180 */
   ...storedSettings
 }
 
@@ -105,7 +107,7 @@ export function onShutdown() {
 
 function generateGrid(settings) {
 
-  //Settings.setSettingForKey('intouch-toolkit.generate-grid', settings)
+  Settings.setSettingForKey('intouch-toolkit.generate-grid', settings)
 
   var settings = {...defaults, ...settings };
 
@@ -142,16 +144,16 @@ function generateGrid(settings) {
     }
   }
 
-  if(Number(breakpoint) > settings.containerWidth) {
-    breakpoint = settings.containerWidth;
+  if(Number(breakpoint) > settings.containerMaxWidth) {
+    breakpoint = settings.containerMaxWidth;
   }
 
   // Calculate margin width based on number or percent
   if(margin == 0) {
     var pixelMarginSize = 0;
   } else {
-    if(typeof marginSize == "string" && marginSize.includes('%')) {
-      var pixelMarginSize = breakpoint * (marginSize.replace("%", "") / 100);
+    if(settings.marginUnit == "%") {
+      var pixelMarginSize = breakpoint * (marginSize / 100);
     } else {
       var pixelMarginSize = parseFloat(marginSize, 10);
     }
@@ -164,8 +166,8 @@ function generateGrid(settings) {
   if(gutter == 0) {
     var pixelGutterSize = 0;
   } else {
-    if(typeof gutterSize == "string" && gutterSize.includes('%')) {
-      var pixelGutterSize = (breakpoint - pixelMarginSize * 2) * (gutterSize.replace("%", "") / 100);
+    if(settings.gutterUnit == "%") {
+      var pixelGutterSize = (breakpoint - pixelMarginSize * 2) * (gutterSize / 100);
     } else {
       var pixelGutterSize = parseFloat(gutterSize, 10);
     }

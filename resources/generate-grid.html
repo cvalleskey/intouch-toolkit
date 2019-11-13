@@ -21,7 +21,7 @@
       </select>
     </div>
     <div class="field">
-      <label for="gutterSize" class="field__label">Gutter</label>
+      <label for="gutterSize" class="field__label" title="The space between columns">Gutter</label>
       <input name="gutterSize" id="gutterSize" type="number" value="" class="field__input" tabindex="2" />
       <select id="gutterUnit" class="field__unit">
         <option value="px">PX</option>
@@ -29,7 +29,7 @@
       </select>
     </div>
     <div class="field">
-      <label for="marginSize" class="field__label">Margin</label>
+      <label for="marginSize" class="field__label" title="The space to the left and right of the entire column group">Margin</label>
       <input name="marginSize" id="marginSize" type="number" value="" class="field__input" tabindex="3" />
       <select id="marginUnit" class="field__unit">
         <option value="px">PX</option>
@@ -39,6 +39,6 @@
   </div>
   <button id="button" class="button" tabindex="4">Generate</button>
   <div id="output"></div>
-  <script src="../generate-grid.js"></script>
+  <script src="../resources_generate-grid.js"></script>
 </body>
 </html>
