@@ -25,7 +25,7 @@ var defaults = {
   columnCount: 12,
   breakpoint : "auto",
   gutter : true,
-  gutterSize: 2,
+  gutterSize: '2%',
   gutterUnit: '%',
   margin : true,
   marginSize : 20,
@@ -64,6 +64,15 @@ export default function () {
     browserWindow.show()
 
     if(selected) {
+
+      var selectedGridSettings = Settings.layerSettingForKey(selected, 'column-settings');
+      log('selectedGridSettings')
+      log(selectedGridSettings)
+
+      if(selectedGridSettings) {
+        defaults = { defaults, ...selectedGridSettings}
+      }
+
       browserWindow.webContents
         .executeJavaScript(`getStoredSettings(${JSON.stringify(defaults)})`)
         .then(res => log(res))
@@ -318,7 +327,14 @@ function generateGrid(settings) {
     _x += el.width;
   }
 
+  var selectedGridSettings = Settings.layerSettingForKey(selected, 'column-settings');
+  if(selectedGridSettings) {
+    selected.remove();
+  }
+
   gridGroup.adjustToFit();
+  document.selectedLayers = [gridGroup];
+  Settings.setLayerSettingForKey(gridGroup, 'column-settings', settings)
 }
 
 export function makeGridOne()       { generateGrid({ columns: "1" }); }
