@@ -113,10 +113,7 @@ function generateGrid(settings) {
   Settings.setSettingForKey('intouch-toolkit.generate-grid', settings)
 
   var settings = {...defaults, ...settings };
-
-  //log('generateGrid')
-  //log(settings)
-
+  
   var document = Document.getSelectedDocument();
   let page = document.selectedPage;
   var selection = document.selectedLayers;

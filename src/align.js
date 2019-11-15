@@ -14,7 +14,6 @@ export function vertically(context) { alignItems("vertically"); }
 
 function alignItems(alignment) {
   var selectedLayersArray = [];
-  var selectedFrame = { x: 0, y: 0, width: 0, height: 0 };
   selectedLayers.forEach(layer => {
     var layerData = {
       layer: layer,
@@ -39,53 +38,37 @@ function alignItems(alignment) {
   });
 
   var selectionFrame = {
-    x: selectedLayersArray.map(layer => layer.frame.absolute_x).sort()[0],
-    y: selectedLayersArray.map(layer => layer.frame.absolute_y).sort()[0],
+    x: Math.min(...selectedLayersArray.map(layer => layer.frame.absolute_x)),
+    y: Math.min(...selectedLayersArray.map(layer => layer.frame.absolute_y)),
     width:
-      selectedLayersArray
-        .map(layer => layer.frame.absolute_x + layer.frame.width)
-        .sort()
-        .reverse()[0] -
-      selectedLayersArray.map(layer => layer.frame.absolute_x).sort()[0],
+      Math.max(...selectedLayersArray.map(layer => layer.frame.absolute_x + layer.frame.width)) -
+      Math.min(...selectedLayersArray.map(layer => layer.frame.absolute_x)),
     height:
-      selectedLayersArray
-        .map(layer => layer.frame.absolute_y + layer.frame.height)
-        .sort()
-        .reverse()[0] -
-      selectedLayersArray.map(layer => layer.frame.absolute_y).sort()[0]
+      Math.max(...selectedLayersArray.map(layer => layer.frame.absolute_y + layer.frame.height)) -
+      Math.min(...selectedLayersArray.map(layer => layer.frame.absolute_y)),
   };
 
   switch (alignment) {
     case "top":
-      var y = selectedLayersArray
-        .map(layer => layer.frame.absolute_y)
-        .sort()[0];
+      var y = Math.min(...selectedLayersArray.map(layer => layer.frame.absolute_y))
       selectedLayersArray.forEach(obj => {
         obj.layer.frame.y += y - obj.frame.absolute_y;
       });
       break;
     case "bottom":
-      var y = selectedLayersArray
-        .map(layer => layer.frame.absolute_y + layer.frame.height)
-        .sort()
-        .reverse()[0];
+      var y = Math.max(...selectedLayersArray.map(layer => layer.frame.absolute_y + layer.frame.height))
       selectedLayersArray.forEach(obj => {
         obj.layer.frame.y += y - obj.frame.absolute_y - obj.layer.frame.height;
       });
       break;
     case "left":
-      var x = selectedLayersArray
-        .map(layer => layer.frame.absolute_x)
-        .sort()[0];
+      var x = Math.min(...selectedLayersArray.map(layer => layer.frame.absolute_x));
       selectedLayersArray.forEach(obj => {
         obj.layer.frame.x += x - obj.frame.absolute_x;
       });
       break;
     case "right":
-      var x = selectedLayersArray
-        .map(layer => layer.frame.absolute_x + layer.frame.width)
-        .sort()
-        .reverse()[0];
+      var x = Math.max(...selectedLayersArray.map(layer => layer.frame.absolute_x + layer.frame.width))
       selectedLayersArray.forEach(obj => {
         obj.layer.frame.x += x - obj.frame.absolute_x - obj.layer.frame.width;
       });
