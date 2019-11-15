@@ -2,59 +2,43 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Generate Grid</title>
+  <title>Columns</title>
   <link rel="stylesheet" href="./style.css">
 </head>
-<body>
-  <section>
-    <!-- <div class="field">
-      <label for="breakpoint">Breakpoint</label>
-      <select id="breakpoint" name="breakpoint">
-        <option value="auto" selected>Auto</option>
-        <option value="320">Phone (320px)</option>
-        <option value="375">iPhone (375px)</option>
-        <option value="414">iPhone large (414px)</option>
-        <option value="640">Phone Horizontal (640px)</option>
-        <option value="768">iPad Portrait (768px)</option>
-        <option value="1024">iPad Landscape (1024px)</option>
-        <option value="1280">Laptop (1280px)</option>
-        <option value="1440">Desktop (1440px)</option>
-        <option value="1920">Desktop Wide (1920px)</option>
-      </select>
-    </div> -->
+<body class="panel">
+  <div class="fields">
     <div class="field">
-      <label>Number of Columns</label>
-      <select id="columns">
+      <label for="columns" class="field__label">Count</label>
+      <select id="columns" class="field__input field__input--select" tabindex="1">
         <option value="1">1 Column</option>
         <option value="2">2 Columns</option>
         <option value="3">3 Columns</option>
         <option value="4">4 Columns</option>
         <option value="6">6 Columns</option>
         <option value="12">12 Columns</option>
-        <option value="8,4">8 Columns + 4 Columns</option>
-        <option value="3,9">3 Columns + 9 Columns</option>
+        <option value="8,4">8+4 Columns</option>
+        <option value="3,9">3+9 Columns</option>
       </select>
     </div>
     <div class="field">
-      <label for="gutter" title="Render a gutter between columns">Gutter</label>
-      <input name="gutter" id="gutter" type="checkbox" />
+      <label for="gutterSize" class="field__label" title="The space between columns">Gutter</label>
+      <input name="gutterSize" id="gutterSize" type="number" value="" class="field__input" tabindex="2" />
+      <select id="gutterUnit" class="field__unit">
+        <option value="px">PX</option>
+        <option value="%">%</option>
+      </select>
     </div>
     <div class="field">
-      <label for="gutter" title="Render a gutter between columns">Gutter Size</label>
-      <input name="gutterSize" id="gutterSize" type="text" value="" />
+      <label for="marginSize" class="field__label" title="The space to the left and right of the entire column group">Margin</label>
+      <input name="marginSize" id="marginSize" type="number" value="" class="field__input" tabindex="3" />
+      <select id="marginUnit" class="field__unit">
+        <option value="px">PX</option>
+        <option value="%">%</option>
+      </select>
     </div>
-    <div class="field">
-      <label for="margin">Margin</label>
-      <input name="margin" id="margin" type="checkbox" />
-    </div>
-    <div class="field">
-      <label for="margin">Margin Size</label>
-      <input name="marginSize" id="marginSize" type="text" value="" />
-    </div>
-  </section>
-  <button id="button">Generate</button>
-
-  <!-- notice the "../" here. It's because webview.js will be compiled in a different folder -->
-  <script src="../generate-grid.js"></script>
+  </div>
+  <button id="button" class="button" tabindex="4">Generate</button>
+  <div id="output"></div>
+  <script src="../resources_generate-grid.js"></script>
 </body>
 </html>

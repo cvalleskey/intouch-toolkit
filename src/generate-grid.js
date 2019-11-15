@@ -25,10 +25,12 @@ var defaults = {
   columnCount: 12,
   breakpoint : "auto",
   gutter : true,
-  gutterSize : '2%',
+  gutterSize: '2%',
+  gutterUnit: '%',
   margin : true,
   marginSize : 20,
-  containerWidth : 1180,
+  marginUnit: 'px',
+  containerMaxWidth : 1000000, /* 1180 */
   ...storedSettings
 }
 
@@ -43,11 +45,10 @@ export default function () {
 
   const options = {
     identifier: webviewIdentifier,
-    width: 480,
-    height: 350,
+    width: 400,
+    height: 172,
     show: false,
-    title: 'Generate Columns',
-    // titleBarStyle: 'hiddenInset'
+    title: 'Columns'
   }
 
   const browserWindow = new BrowserWindow(options)
@@ -60,11 +61,19 @@ export default function () {
     var selection = document.selectedLayers;
     var selected = (selection.length == 1)? selection.layers[0] : false;
 
+    browserWindow.show()
+
     if(selected) {
+
+      var selectedGridSettings = Settings.layerSettingForKey(selected, 'column-settings');
+      if(selectedGridSettings) {
+        defaults = { defaults, ...selectedGridSettings}
+      }
+
       browserWindow.webContents
         .executeJavaScript(`getStoredSettings(${JSON.stringify(defaults)})`)
-        .then(res => {})
-      browserWindow.show()
+        .then(res => browserWindow.show())
+        .catch(error => log(error))
     } else {
       getWebview(webviewIdentifier).close();
       UI.message('Select a layer or artboard to generate a grid.');
@@ -79,11 +88,13 @@ export default function () {
   })
 
   webContents.on('makeGrid', s => {
-    log('making grid')
-    log(s)
+    //log('making grid')
+    //log(s)
     generateGrid(s);
     getWebview(webviewIdentifier).close();
   });
+
+  webContents.on('nativeLog', s => log(s));
 
   browserWindow.loadURL(require('../resources/generate-grid.html'))
 }
@@ -102,7 +113,7 @@ function generateGrid(settings) {
   Settings.setSettingForKey('intouch-toolkit.generate-grid', settings)
 
   var settings = {...defaults, ...settings };
-
+  
   var document = Document.getSelectedDocument();
   let page = document.selectedPage;
   var selection = document.selectedLayers;
@@ -133,16 +144,16 @@ function generateGrid(settings) {
     }
   }
 
-  if(Number(breakpoint) > settings.containerWidth) {
-    breakpoint = settings.containerWidth;
+  if(Number(breakpoint) > settings.containerMaxWidth) {
+    breakpoint = settings.containerMaxWidth;
   }
 
   // Calculate margin width based on number or percent
   if(margin == 0) {
     var pixelMarginSize = 0;
   } else {
-    if(typeof marginSize == "string" && marginSize.includes('%')) {
-      var pixelMarginSize = breakpoint * (marginSize.replace("%", "") / 100);
+    if(settings.marginUnit == "%") {
+      var pixelMarginSize = breakpoint * (marginSize / 100);
     } else {
       var pixelMarginSize = parseFloat(marginSize, 10);
     }
@@ -155,8 +166,8 @@ function generateGrid(settings) {
   if(gutter == 0) {
     var pixelGutterSize = 0;
   } else {
-    if(typeof gutterSize == "string" && gutterSize.includes('%')) {
-      var pixelGutterSize = (breakpoint - pixelMarginSize * 2) * (gutterSize.replace("%", "") / 100);
+    if(settings.gutterUnit == "%") {
+      var pixelGutterSize = (breakpoint - pixelMarginSize * 2) * (gutterSize / 100);
     } else {
       var pixelGutterSize = parseFloat(gutterSize, 10);
     }
@@ -307,7 +318,14 @@ function generateGrid(settings) {
     _x += el.width;
   }
 
+  var selectedGridSettings = Settings.layerSettingForKey(selected, 'column-settings');
+  if(selectedGridSettings) {
+    selected.remove();
+  }
+
   gridGroup.adjustToFit();
+  document.selectedLayers = [gridGroup];
+  Settings.setLayerSettingForKey(gridGroup, 'column-settings', settings)
 }
 
 export function makeGridOne()       { generateGrid({ columns: "1" }); }

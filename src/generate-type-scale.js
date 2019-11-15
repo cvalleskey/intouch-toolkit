@@ -27,8 +27,7 @@ export default function () {
     width: 480,
     height: 370,
     show: false,
-    title: 'Generate Type Scale',
-    titleBarStyle: 'hiddenInset'
+    title: 'Generate Type Scale'
   }
   const settings = {
     breakpoints : [
