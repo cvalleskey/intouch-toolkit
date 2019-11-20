@@ -3,8 +3,7 @@
   "bundleVersion": 1,
   "icon": "icon.png",
   "commands": [
-
-        {
+    {
       "name": "Left",
       "identifier": "intouch-toolkit.align.left",
       "shortcut": "ctrl command ←",
@@ -151,7 +150,7 @@
       "handlers": { "run": "makeGridThreeNine" }
     },
     {
-      "name": "Make padding...",
+      "name": "Make spacing...",
       "identifier": "intouch-toolkit.create-padding",
       "script": "./create-padding.js",
       "handlers": {
@@ -251,6 +250,17 @@
         }
       },
       "description": "Quick export all selected Artboards into a PDF document."
+    },
+    {
+      "name": "Edit design tokens...",
+      "identifier": "intouch-toolkit.tokens",
+      "script": "./tokens.js",
+      "handlers": {
+        "run": "onRun",
+        "actions": {
+          "Shutdown": "onShutdown"
+        }
+      }
     }
   ],
   "menu": {
@@ -304,6 +314,17 @@
           "-",
           "intouch-toolkit.update-formatted-text-style",
           "intouch-toolkit.sync-library-text-styles"
+        ]
+      },
+      "-",
+      {
+        "title": "Styleguide",
+        "items": [
+          "intouch-toolkit.tokens",
+          "-",
+          "intouch-toolkit.styleguide.get-styleguide",
+          "intouch-toolkit.styleguide.generate-spacing",
+          "intouch-toolkit.styleguide.generate-colors"
         ]
       }
     ]

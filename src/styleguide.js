@@ -20,7 +20,7 @@ Scenarios:
 
 import UI from 'sketch/ui';
 import Document from 'sketch/dom';
-import { Page } from 'sketch/dom';
+import { Page, Style, SharedStyle } from 'sketch/dom';
 
 var document = Document.getSelectedDocument();
 let page = document.selectedPage;
@@ -57,9 +57,9 @@ Examples:
 \*-------------------------------------------*/
 
   colors : [
-    { name: "Primary", color: "#B2D236FF"},
-    { name: "Secondary", color: "#24B5ACFF"},
-    { name: "Tertiary", color: "#076D71FF"},
+    { name: "primary", color: "#B2D236FF"},
+    { name: "secondary", color: "#24B5ACFF"},
+    { name: "tertiary", color: "#076D71FF"},
 
     // { name: "Base03", color: "#002b36FF" },
     // { name: "Base02", color: "#073642FF" },
@@ -298,10 +298,31 @@ From a config file,
 \*-------------------------------------------*/
 export function generateColors() {
 
-  var config = skyriziConfig;
+  var config = baseConfig;
 
   let page = document.selectedPage;
   var colors = document.colors;
+
+  // Update the document palette
+  // Create/update the shared layer styles
+  document.colors = [];
+  config.colors.forEach((color) => {
+    var existingSharedLayerStyle = document.sharedLayerStyles.filter(style => style.name == 'color/' + color.name)[0];
+    //log('existingSharedLayerStyle')
+    //log(existingSharedLayerStyle)
+
+    if(existingSharedLayerStyle) {
+      existingSharedLayerStyle.style.fills = [{ color: color.color, fillType: Style.FillType.Color }];
+    } else {
+      document.sharedLayerStyles.push({
+        name: 'color/' + color.name,
+        style: {
+          fills: [{ color: color.color, fillType: Style.FillType.Color }]
+        }
+      });
+    }
+    document.colors.push({ color: color.color, name: color.name });
+  });
 
   var group = new Document.Group({
     parent: page,
@@ -311,30 +332,27 @@ export function generateColors() {
   var _x = 0;
   var _y = 0;
 
-  config.colors.forEach((color) => {
+  var sharedLayerStyleColors = document.sharedLayerStyles.filter(style => style.name.startsWith('color/'));
+
+  //log('sharedLayerStyleColors')
+  //log(sharedLayerStyleColors)
+
+  sharedLayerStyleColors.forEach((sharedStyle) => {
     var shape = new Document.ShapePath({
         parent: group,
-        name : color.name,
+        name : sharedStyle.name,
         frame: {
           x: _x,
           y: _y,
           width: 80,
           height: 80
         },
-        style: { fills: [color.color] }
+        sharedStyleId : sharedStyle.id
     });
+    shape.style.syncWithSharedStyle(sharedStyle)
     _x += 80 + settings.distanceBetweenSpaces;
   });
   group.adjustToFit();
-
-  document.colors = [];
-  config.colors.forEach((color) => {
-    log(color)
-    document.colors.push({
-      color: color.color,
-      name: color.name
-    });
-  });
 
   UI.message("Colors generated");
 
