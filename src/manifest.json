@@ -96,7 +96,8 @@
       "handlers": {
         "run": "onRun",
         "actions": {
-          "Shutdown": "onShutdown"
+          "Shutdown": "onShutdown",
+          "SelectionChanged": "onSelectionChanged"
         }
       }
     },

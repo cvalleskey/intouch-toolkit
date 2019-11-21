@@ -5,6 +5,7 @@ import Document from 'sketch/dom'
 import Settings from 'sketch/settings'
 
 const webviewIdentifier = 'intouch-toolkit.webview'
+const editGridIdentifier = 'intouch-toolkit.webview.edit-grid-ui';
 
 const config = {
   colors : {
@@ -150,7 +151,6 @@ function generateGrid(settings) {
 
   // Calculate margin width based on number or percent
   if(marginSize == 0) {
-    log('its zero')
     var pixelMarginSize = 0;
   } else {
     if(settings.marginUnit == "%") {
@@ -336,3 +336,48 @@ export function makeGridFour()      { generateGrid({ columns: "4" }); }
 export function makeGridSix()       { generateGrid({ columns: "6" }); }
 export function makeGridEightFour() { generateGrid({ columns: "8,4" }); }
 export function makeGridThreeNine() { generateGrid({ columns: "3,9" }); }
+
+export function onSelectionChanged(context) {
+  context.actionContext.document.showMessage('Selection changed.')
+
+  getWebview(editGridIdentifier).close();
+
+  const webViewOptions = {
+    identifier: editGridIdentifier,
+    width: 120,
+    height: 40,
+    show: false,
+    frame: false,
+    webpage: "edit-grid-overlay.html",
+  }
+
+  const browserWindow = new BrowserWindow(options)
+
+  // only show the window when the page has loaded to avoid a white flash
+  browserWindow.once('ready-to-show', () => {
+
+    var document = Document.getSelectedDocument();
+    let page = document.selectedPage;
+    var selection = document.selectedLayers;
+    var selected = (selection.length == 1)? selection.layers[0] : false;
+
+    browserWindow.show()
+  });
+
+  const webContents = browserWindow.webContents
+
+  webContents.on('editGrid', s => {
+    getWebview(editGridIdentifier).close();
+  });
+
+  var document = Document.getSelectedDocument();
+  let page = document.selectedPage;
+  var selection = document.selectedLayers;
+  var selected = (selection.length == 1)? selection.layers[0] : false;
+
+  log('selected.name')
+  log(selected.name)
+  if(selected.name) {}
+
+  browserWindow.loadURL(require('../resources/' + webViewOptions.webpage))
+}
