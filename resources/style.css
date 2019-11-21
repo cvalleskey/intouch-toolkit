@@ -98,14 +98,14 @@ label {
 }
 
 .panel {
-  padding: 1.25rem;
+  padding: 0 1.25rem;
   color: #FFF;
   font: 16px/1.25 -apple-system, sans-serif;
 }
 
 .fields {
   display: flex;
-  margin: 0 -0.25rem;
+  margin: 1.25rem -0.25rem;
 }
 
 .fields > * {
@@ -173,7 +173,6 @@ label {
   border: none;
   border-radius: 0.5rem;
   font-size: 1rem;
-  margin: 1.25rem 0;
   cursor: pointer;
 }
 
@@ -185,4 +184,8 @@ label {
 
 .button:active {
   background-color: #01494C;
+}
+
+.button--secondary {
+  background-color: #223032;
 }
