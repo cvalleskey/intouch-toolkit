@@ -113,7 +113,7 @@ function generateGrid(settings) {
   Settings.setSettingForKey('intouch-toolkit.generate-grid', settings)
 
   var settings = {...defaults, ...settings };
-  
+
   var document = Document.getSelectedDocument();
   let page = document.selectedPage;
   var selection = document.selectedLayers;
@@ -149,7 +149,8 @@ function generateGrid(settings) {
   }
 
   // Calculate margin width based on number or percent
-  if(margin == 0) {
+  if(marginSize == 0) {
+    log('its zero')
     var pixelMarginSize = 0;
   } else {
     if(settings.marginUnit == "%") {
@@ -163,7 +164,7 @@ function generateGrid(settings) {
   let containerFinalWidth = breakpoint - (pixelMarginSize * 2);
 
   // Calculate single gutter width
-  if(gutter == 0) {
+  if(gutterSize == 0) {
     var pixelGutterSize = 0;
   } else {
     if(settings.gutterUnit == "%") {
@@ -220,7 +221,7 @@ function generateGrid(settings) {
 		var column = columns[i];
 
     // Add outer margin
-    if(i == 0 && margin) {
+    if(i == 0 && marginSize) {
       columnsArray.push({
         type: 'margin',
         width : pixelMarginSize
@@ -228,7 +229,7 @@ function generateGrid(settings) {
     }
 
     // Add gutter
-    if(i != 0 && gutter) {
+    if(i != 0 && gutterSize) {
       columnsArray.push({
         type: 'gutter',
         width : pixelGutterSize
@@ -241,7 +242,7 @@ function generateGrid(settings) {
     });
 
     // Add outer margin
-    if(i == (columns.length-1) && margin) {
+    if(i == (columns.length-1) && marginSize) {
       columnsArray.push({
         type: 'margin',
         width : pixelMarginSize
