@@ -3,7 +3,7 @@ import { getWebview } from "sketch-module-web-view/remote";
 import UI from "sketch/ui";
 import Document from "sketch/dom";
 import Settings from "sketch/settings";
-import { Page, Style, SharedStyle } from 'sketch/dom';
+import { Page, Style, SharedStyle } from "sketch/dom";
 
 const webViewOptions = {
   identifier: "intouch-toolkit.tokens",
@@ -15,7 +15,11 @@ const webViewOptions = {
 };
 
 const defaults = {
-  colors: [],
+  colors: [
+    { name: "primary", color: "#B2D236"},
+    { name: "secondary", color: "#24B5AC"},
+    { name: "tertiary", color: "#076D71"}
+  ],
   gradients: [],
   typography: [],
   spacing: []
@@ -27,7 +31,9 @@ export default function() {
   browserWindow.once("ready-to-show", () => {
     var tokens = getTokens();
     browserWindow.show();
-    browserWindow.webContents.executeJavaScript(`getTokens(${JSON.stringify(tokens)})`).then(res => {});
+    browserWindow.webContents
+      .executeJavaScript(`getTokens(${JSON.stringify(tokens)})`)
+      .then(res => {});
   });
   const webContents = browserWindow.webContents;
   webContents.on("updateTokens", tokens => {
@@ -38,18 +44,14 @@ export default function() {
   browserWindow.loadURL(require("../resources/" + webViewOptions.webpage));
 
   function getTokens() {
-    //log('getTokens')
-    //log(Settings.documentSettingForKey(document, "tokens"))
     if (Settings.documentSettingForKey(document, "tokens") == undefined) {
-      return [];
+      return [defaults];
     } else {
       return Settings.documentSettingForKey(document, "tokens");
     }
   }
 
   function updateTokens(response) {
-    //log('tokens')
-    //log(tokens)
     var tokens = response.tokens[0];
     document.colors = [];
     tokens.colors.forEach(color => {
@@ -57,7 +59,7 @@ export default function() {
       var existingSharedLayerStyle = document.sharedLayerStyles.filter(
         style => style.name == "color/" + color.name
       );
-      log(existingSharedLayerStyle)
+      log(existingSharedLayerStyle);
       if (existingSharedLayerStyle.length) {
         existingSharedLayerStyle[0].style.fills = [
           { color: color.color, fillType: Style.FillType.Color }
@@ -72,7 +74,7 @@ export default function() {
       }
     });
 
-    Settings.setDocumentSettingForKey(document, 'tokens', tokens);
+    Settings.setDocumentSettingForKey(document, "tokens", tokens);
     UI.message("Tokens updated successfully.");
   }
 }
