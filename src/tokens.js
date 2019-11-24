@@ -47,7 +47,7 @@ export default function() {
     if (Settings.documentSettingForKey(document, "tokens") == undefined) {
       return [defaults];
     } else {
-      return Settings.documentSettingForKey(document, "tokens");
+      return [Settings.documentSettingForKey(document, "tokens")];
     }
   }
 

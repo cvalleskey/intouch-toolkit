@@ -8,6 +8,5 @@ document.getElementById("confirm").addEventListener("click", () => {
 });
 
 window.getTokens = tokens => {
-  document.getElementById("tokens").innerHTML =
-    "[" + JSON.stringify(tokens, null, "\t") + "]";
+  document.getElementById("tokens").innerHTML = JSON.stringify(tokens, null, "\t");
 };
