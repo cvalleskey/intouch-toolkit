@@ -5,7 +5,8 @@ document.addEventListener('contextmenu', (e) => {
 
 document.addEventListener('keypress', function(e) {
   if(e.keyCode == 13) {
-      document.getElementById('button').click();
+    e.preventDefault();
+    document.getElementById('button').click();
   }
 });
 

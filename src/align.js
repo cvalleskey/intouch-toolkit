@@ -1,5 +1,6 @@
 import UI from "sketch/ui";
 import Document from "sketch/dom";
+import Track from "sketch-module-google-analytics";
 
 var document = Document.getSelectedDocument();
 var selectedLayers = document.selectedLayers;
@@ -87,4 +88,6 @@ function alignItems(alignment) {
       break;
     default:
   }
+
+  Track("UA-2641354-26", "event", { ec: "align", ea: "alignItems", el: alignment });
 }
