@@ -43,48 +43,6 @@ select {
   cursor: pointer;
 }
 
-/* .field {
-  display: flex;
-  width: 100%;
-  margin: 0.5rem 0;
-}
-
-.field > label,
-.field > input,
-.field > select {
-  width: 50%;
-  display: flex;
-  align-items: center;
-  flex: 1 0 auto;
-}
-
-label {
-  font-weight: bold;
-}
-
-input, select {
-  height: 2rem;
-  padding: 0.75rem 0.5rem;
-  font-size: 1.25rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(0,0,0,.2);
-}
-
-button {
-  background: #071d49;
-  color: #FFF;
-  font-size: 1rem;
-  font-family: 'Roboto', sans-serif;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
-  border: none;
-  cursor: pointer;
-  display: block;
-  width: 100%;
-  margin: 1rem 0;
-  border-radius: 0.5rem;
-} */
-
 label {
   text-transform: uppercase;
   letter-spacing: 1px;
