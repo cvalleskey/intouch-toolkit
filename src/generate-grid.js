@@ -3,6 +3,7 @@ import { getWebview } from 'sketch-module-web-view/remote'
 import UI from 'sketch/ui'
 import Document from 'sketch/dom'
 import Settings from 'sketch/settings'
+import Track from "sketch-module-google-analytics"
 
 const webviewIdentifier = 'intouch-toolkit.webview'
 
@@ -18,20 +19,19 @@ const config = {
   }
 }
 
-var storedSettings = Settings.settingForKey('intouch-toolkit.generate-grid');
+//var storedSettings = Settings.settingForKey('intouch-toolkit.generate-grid');
 
 var defaults = {
   columns : 3,
   columnCount: 12,
   breakpoint : "auto",
   gutter : true,
-  gutterSize: '2%',
+  gutterSize: 2,
   gutterUnit: '%',
   margin : true,
   marginSize : 20,
   marginUnit: 'px',
   containerMaxWidth : 1000000, /* 1180 */
-  ...storedSettings
 }
 
 function loadLocalImage(filePath) {
@@ -67,7 +67,7 @@ export default function () {
 
       var selectedGridSettings = Settings.layerSettingForKey(selected, 'column-settings');
       if(selectedGridSettings) {
-        defaults = { defaults, ...selectedGridSettings}
+        defaults = { ...defaults, ...selectedGridSettings}
       }
 
       browserWindow.webContents
@@ -82,14 +82,7 @@ export default function () {
 
   const webContents = browserWindow.webContents
 
-  // print a message when the page loads
-  webContents.on('did-finish-load', () => {
-    //UI.message('UI loaded!')
-  })
-
   webContents.on('makeGrid', s => {
-    //log('making grid')
-    //log(s)
     generateGrid(s);
     getWebview(webviewIdentifier).close();
   });
@@ -99,8 +92,6 @@ export default function () {
   browserWindow.loadURL(require('../resources/generate-grid.html'))
 }
 
-// When the plugin is shutdown by Sketch (for example when the user disable the plugin)
-// we need to close the webview if it's open
 export function onShutdown() {
   const existingWebview = getWebview(webviewIdentifier)
   if (existingWebview) {
@@ -326,7 +317,9 @@ function generateGrid(settings) {
 
   gridGroup.adjustToFit();
   document.selectedLayers = [gridGroup];
-  Settings.setLayerSettingForKey(gridGroup, 'column-settings', settings)
+  Settings.setLayerSettingForKey(gridGroup, 'column-settings', settings);
+
+  Track("UA-2641354-26", "event", { ec: "grid", ea: "makeGrid", el: JSON.stringify(settings) });
 }
 
 export function makeGridOne()       { generateGrid({ columns: "1" }); }
