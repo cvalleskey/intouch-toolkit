@@ -19,8 +19,6 @@ const config = {
   }
 }
 
-//var storedSettings = Settings.settingForKey('intouch-toolkit.generate-grid');
-
 var defaults = {
   columns : 3,
   columnCount: 12,
