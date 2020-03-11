@@ -51,22 +51,20 @@ export default function () {
 
   const browserWindow = new BrowserWindow(options)
 
-  // only show the window when the page has loaded to avoid a white flash
   browserWindow.once('ready-to-show', () => {
 
     var document = Document.getSelectedDocument();
-    let page = document.selectedPage;
-    var selection = document.selectedLayers;
-    var selected = (selection.length == 1)? selection.layers[0] : false;
 
-    browserWindow.show()
+    browserWindow.show();
 
-    if(selected) {
-
-      var selectedGridSettings = Settings.layerSettingForKey(selected, 'column-settings');
-      if(selectedGridSettings) {
-        defaults = { ...defaults, ...selectedGridSettings}
-      }
+    // TO-DO: Support updating multiple grids at the same time
+    if(document.selectedLayers.length) {
+      document.selectedLayers.forEach(layer => {
+        var selectedGridSettings = Settings.layerSettingForKey(layer, 'column-settings');
+        if(selectedGridSettings) {
+          defaults = { ...defaults, ...selectedGridSettings}
+        }
+      });
 
       browserWindow.webContents
         .executeJavaScript(`getStoredSettings(${JSON.stringify(defaults)})`)
@@ -81,7 +79,7 @@ export default function () {
   const webContents = browserWindow.webContents
 
   webContents.on('makeGrid', s => {
-    generateGrid(s);
+    generateGridFromSelectedLayers(s);
     getWebview(webviewIdentifier).close();
   });
 
@@ -97,7 +95,26 @@ export function onShutdown() {
   }
 }
 
-function generateGrid(settings) {
+export function onLayersResized(context) {
+  var document = Document.getSelectedDocument();
+  var selection = document.selectedLayers;
+  selection.forEach(layer => {
+    var savedGridSettings = Settings.layerSettingForKey(layer, 'column-settings');
+    if(savedGridSettings) {
+      generateGrid(layer, savedGridSettings);
+    }
+  })
+}
+
+function generateGridFromSelectedLayers(settings) {
+  var document = Document.getSelectedDocument();
+  var selection = document.selectedLayers;
+  selection.layers.forEach(layer => {
+      generateGrid(layer, settings);
+  })
+}
+
+function generateGrid(layer, settings) {
 
   Settings.setSettingForKey('intouch-toolkit.generate-grid', settings)
 
@@ -105,14 +122,12 @@ function generateGrid(settings) {
 
   var document = Document.getSelectedDocument();
   let page = document.selectedPage;
-  var selection = document.selectedLayers;
-  var selected = (selection.length == 1)? selection.layers[0] : false;
 
-  if(!selected) {
-    getWebview(webviewIdentifier).close();
-    UI.message('Select a layer or artboard to generate a grid.');
-    return;
-  }
+  // if(!selected) {
+  //   getWebview(webviewIdentifier).close();
+  //   UI.message('Select a layer or artboard to generate a grid.');
+  //   return;
+  // }
 
   var columns = settings.columns;
   var gutter = settings.gutter;
@@ -127,11 +142,13 @@ function generateGrid(settings) {
     var breakpoint = parseInt(settings.breakpoint, 10);
   }
 
-  if(selected) {
-    if(breakpoint == "auto") {
-      breakpoint = selected.frame.width;
-    }
-  }
+  // if(selected) {
+  //   if(breakpoint == "auto") {
+  //     breakpoint = selected.frame.width;
+  //   }
+  // }
+
+  breakpoint = layer.frame.width;
 
   if(Number(breakpoint) > settings.containerMaxWidth) {
     breakpoint = settings.containerMaxWidth;
@@ -139,7 +156,6 @@ function generateGrid(settings) {
 
   // Calculate margin width based on number or percent
   if(marginSize == 0) {
-    log('its zero')
     var pixelMarginSize = 0;
   } else {
     if(settings.marginUnit == "%") {
@@ -170,11 +186,11 @@ function generateGrid(settings) {
 
   if(columns == "auto") {
 
-    if(selected.frame) {
+    if(layer.frame) {
 
-      var selectedWidth = selected.frame.width;
+      var layerWidth = layer.frame.width;
 
-      if(selectedWidth < 600) {
+      if(layerWidth < 600) {
         columns = [12];
       } else {
         columns = Array(12).fill(1);
@@ -243,22 +259,22 @@ function generateGrid(settings) {
     name : '📐 Columns',
     frame : {
       width : breakpoint,
-      height : (selection.length == 1)? selected.frame.height : 100
+      height : layer.frame.height
     }
   }
 
   var _x = 0;
   var _y = 0;
 
-  if(selected.type == "Artboard") {
-    grids.parent = selected;
+  if(layer.type == "Artboard") {
+    grids.parent = layer;
   } else {
-    grids.parent = selected.parent.id? selected.parent : page;
-    _x = selected.frame.x;
-    _y = selected.frame.y;
+    grids.parent = layer.parent.id? layer.parent : page;
+    _x = layer.frame.x;
+    _y = layer.frame.y;
   }
-  if(selected.frame.width > breakpoint) {
-    _x += (selected.frame.width - breakpoint) / 2;
+  if(layer.frame.width > breakpoint) {
+    _x += (layer.frame.width - breakpoint) / 2;
   }
 
   grids.frame.x = _x;
@@ -267,7 +283,7 @@ function generateGrid(settings) {
 
   var gridGroup = new Document.Group(grids);
 
-  gridGroup.index = selected.index + 1;
+  gridGroup.index = layer.index + 1;
 
   var _x = 0;
   var _y = 0;
@@ -283,7 +299,7 @@ function generateGrid(settings) {
           x: _x,
           y: _y,
           width: el.width,
-          height: (selection.length == 1)? selection.layers[0].frame.height : 100
+          height: layer.frame.height
         },
         style: { fills: [config.colors.column] }
     });
@@ -308,9 +324,9 @@ function generateGrid(settings) {
     _x += el.width;
   }
 
-  var selectedGridSettings = Settings.layerSettingForKey(selected, 'column-settings');
-  if(selectedGridSettings) {
-    selected.remove();
+  var layerGridSettings = Settings.layerSettingForKey(layer, 'column-settings');
+  if(layerGridSettings) {
+    layer.remove();
   }
 
   gridGroup.adjustToFit();
@@ -320,10 +336,10 @@ function generateGrid(settings) {
   Track("UA-2641354-26", "event", { ec: "grid", ea: "makeGrid", el: JSON.stringify(settings) });
 }
 
-export function makeGridOne()       { generateGrid({ columns: "1" }); }
-export function makeGridTwo()       { generateGrid({ columns: "2" }); }
-export function makeGridThree()     { generateGrid({ columns: "3" }); }
-export function makeGridFour()      { generateGrid({ columns: "4" }); }
-export function makeGridSix()       { generateGrid({ columns: "6" }); }
-export function makeGridEightFour() { generateGrid({ columns: "8,4" }); }
-export function makeGridThreeNine() { generateGrid({ columns: "3,9" }); }
+export function makeGridOne()       { generateGridFromSelectedLayers({ columns: "1" }); }
+export function makeGridTwo()       { generateGridFromSelectedLayers({ columns: "2" }); }
+export function makeGridThree()     { generateGridFromSelectedLayers({ columns: "3" }); }
+export function makeGridFour()      { generateGridFromSelectedLayers({ columns: "4" }); }
+export function makeGridSix()       { generateGridFromSelectedLayers({ columns: "6" }); }
+export function makeGridEightFour() { generateGridFromSelectedLayers({ columns: "8,4" }); }
+export function makeGridThreeNine() { generateGridFromSelectedLayers({ columns: "3,9" }); }

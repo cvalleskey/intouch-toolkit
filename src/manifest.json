@@ -3,8 +3,7 @@
   "bundleVersion": 1,
   "icon": "icon.png",
   "commands": [
-
-        {
+    {
       "name": "Left",
       "identifier": "intouch-toolkit.align.left",
       "shortcut": "ctrl command ←",
@@ -97,7 +96,8 @@
       "handlers": {
         "run": "onRun",
         "actions": {
-          "Shutdown": "onShutdown"
+          "Shutdown": "onShutdown",
+          "LayersResized.finish": "onLayersResized"
         }
       }
     },
