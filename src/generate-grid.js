@@ -1,3 +1,17 @@
+/*--------------------------------------------*\
+
+Generate Grid
+=============
+
+Renders a group of layers which act as boundaries
+and zones for margins, gaps, and columns. Also
+supports auto-updating when resized.
+
+To-do:
+- Better UI
+
+\*-------------------------------------------*/
+
 import BrowserWindow from 'sketch-module-web-view'
 import { getWebview } from 'sketch-module-web-view/remote'
 import UI from 'sketch/ui'
@@ -39,14 +53,16 @@ function loadLocalImage(filePath) {
     return NSImage.alloc().initWithContentsOfFile(filePath);
 }
 
-export default function () {
+export default function (context) {
 
   const options = {
     identifier: webviewIdentifier,
     width: 400,
     height: 172,
     show: false,
-    title: 'Columns'
+    title: 'Columns',
+    parent: Document.getSelectedDocument(),
+    center: true
   }
 
   const browserWindow = new BrowserWindow(options)
@@ -62,7 +78,7 @@ export default function () {
       document.selectedLayers.forEach(layer => {
         var selectedGridSettings = Settings.layerSettingForKey(layer, 'column-settings');
         if(selectedGridSettings) {
-          defaults = { ...defaults, ...selectedGridSettings}
+          defaults = { isUpdate: true, ...defaults, ...selectedGridSettings}
         }
       });
 

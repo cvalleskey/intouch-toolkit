@@ -3,12 +3,12 @@
 Generate Type Scale
 ===================
 
-Uses native Sketch features and attributes to export color, gradient,
-type, and spacing rules into a design token configuration file.
+Takes user input on minimum and maximum desired font sizes and generates Text
+Styles at certain breakpoints to aid in responsive design and layout.
 
-Options:
-- Generate Single (Single)/Web/Mobile App
-
+To-do:
+- Define breakpoints
+- User-friendly interface
 
 \*-------------------------------------------*/
 
@@ -27,7 +27,9 @@ export default function () {
     width: 480,
     height: 370,
     show: false,
-    title: 'Generate Type Scale'
+    title: 'Generate Type Scale',
+    parent: Document.getSelectedDocument(),
+    center: true
   }
   const settings = {
     breakpoints : [

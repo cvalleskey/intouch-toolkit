@@ -10,7 +10,7 @@ document.addEventListener('keypress', function(e) {
   }
 });
 
-document.getElementById('button').focus();
+//document.getElementById('button').focus();
 
 // call the plugin from the webview
 document.getElementById('button').addEventListener('click', () => {
@@ -31,17 +31,16 @@ document.getElementById('button').addEventListener('click', () => {
 // call the wevbiew from the plugin
 window.getStoredSettings = (settings) => {
 
-  //window.postMessage('nativeLog', settings);
+  if(settings.isUpdate) {
+    document.getElementById('button').innerText = "Update";
+  }
 
   var elColumns = document.getElementById('columns');
-
   elColumns.value = settings.columns;
-  //document.getElementById('gutter').checked = settings.gutter;
 
   document.getElementById('gutterSize').value = Number(settings.gutterSize);
   document.getElementById('gutterUnit').value = settings.gutterUnit;
 
-  //document.getElementById('margin').checked = settings.margin;
   document.getElementById('marginSize').value = Number(settings.marginSize);
   document.getElementById('marginUnit').value = settings.marginUnit;
 }
