@@ -9,6 +9,8 @@ supports auto-updating when resized.
 
 To-do:
 - Better UI
+- Preview and instant updates
+- Support nested grids (indirect selection)
 
 \*-------------------------------------------*/
 

@@ -46,14 +46,14 @@
       "handlers": { "run": "bottom" }
     },
     {
-      "name": "Superscript ",
+      "name": "Superscript",
       "identifier": "intouch-toolkit.auto-superscript",
       "shortcut": "ctrl command =",
       "script": "./auto-superscript.js",
       "handlers": { "run": "autoSuperscript" }
     },
     {
-      "name": "Subscript ",
+      "name": "Subscript",
       "identifier": "intouch-toolkit.auto-subscript",
       "shortcut": "ctrl command -",
       "script": "./auto-superscript.js",
@@ -251,6 +251,18 @@
         }
       },
       "description": "Quick export all selected Artboards into a PDF document."
+    },
+    {
+      "name": "Find and Replace Text",
+      "identifier": "intouch-toolkit.find-and-replace-text",
+      "shortcut": "ctrl command shift f",
+      "script": "./find-and-replace-text.js",
+      "handlers": {
+        "run": "onRun",
+        "actions": {
+          "Shutdown": "onShutdown"
+        }
+      }
     }
   ],
   "menu": {
@@ -258,6 +270,8 @@
     "items": [
       "intouch-toolkit.auto-superscript",
       "intouch-toolkit.auto-subscript",
+      "-",
+      "intouch-toolkit.find-and-replace-text",
       "-",
       {
         "title": "Align",
