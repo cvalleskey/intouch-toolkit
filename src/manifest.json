@@ -265,9 +265,8 @@
       }
     },
     {
-      "name": "Set tab stops",
+      "name": "Set List Spacing",
       "identifier": "intouch-toolkit.set-tab-stops",
-      "shortcut": "ctrl command shift f",
       "script": "./set-tab-stops.js",
       "handlers": {
         "run": "onRun",
@@ -283,8 +282,6 @@
     "items": [
       "intouch-toolkit.auto-superscript",
       "intouch-toolkit.auto-subscript",
-      "-",
-      "intouch-toolkit.find-and-replace-text",
       "-",
       {
         "title": "Align",
@@ -325,14 +322,20 @@
         ]
       },
       {
-        "title": "Typography",
+        "title": "Text Styles",
         "items": [
-          "intouch-toolkit.set-tab-stops",
-          "-",
           "intouch-toolkit.generate-type-scale",
           "-",
           "intouch-toolkit.update-formatted-text-style",
           "intouch-toolkit.sync-library-text-styles"
+        ]
+      },
+      "-",
+      {
+        "title": "Experimental",
+        "items": [
+          "intouch-toolkit.set-tab-stops",
+          "intouch-toolkit.find-and-replace-text"
         ]
       }
     ]

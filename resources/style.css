@@ -177,10 +177,8 @@ label {
 .button--option:hover { opacity: 1; background: none;  }
 
 .options {
-  margin-bottom: 1rem;
   display: flex;
-  justify-content: flex-end;
-  margin-right: -0.5rem;
+  margin: 0 -0.5rem 1rem;
 }
 
 .options > * {
