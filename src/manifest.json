@@ -263,6 +263,19 @@
           "Shutdown": "onShutdown"
         }
       }
+    },
+    {
+      "name": "Set tab stops",
+      "identifier": "intouch-toolkit.set-tab-stops",
+      "shortcut": "ctrl command shift f",
+      "script": "./set-tab-stops.js",
+      "handlers": {
+        "run": "onRun",
+        "actions": {
+          "Shutdown": "onShutdown"
+        }
+      },
+      "description": "Adjust the spacing between tabs in a text list."
     }
   ],
   "menu": {
@@ -312,8 +325,10 @@
         ]
       },
       {
-        "title": "Text Styles",
+        "title": "Typography",
         "items": [
+          "intouch-toolkit.set-tab-stops",
+          "-",
           "intouch-toolkit.generate-type-scale",
           "-",
           "intouch-toolkit.update-formatted-text-style",

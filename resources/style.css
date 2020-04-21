@@ -34,7 +34,7 @@ html {
 }
 
 body {
-  background: linear-gradient(-45deg, #182628, #223032);
+  background: linear-gradient(-45deg, var(--c-black), var(--c-teal-darker));
 }
 
 input, textarea {
@@ -159,4 +159,30 @@ label {
 
 .button:active {
   background-color: #01494C;
+}
+
+.button--option {
+  width: auto;
+  margin: 0;
+  padding: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+  font-weight: bold;
+  background: none;
+  color: #FFF;
+  border: none;
+  opacity: 0.6;
+}
+.button--option:hover { opacity: 1; background: none;  }
+
+.options {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: -0.5rem;
+}
+
+.options > * {
+  margin: 0 0.5rem;
 }
