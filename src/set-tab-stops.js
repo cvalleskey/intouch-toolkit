@@ -47,7 +47,6 @@ export default function (context) {
 
     browserWindow.webContents
       .executeJavaScript(`setValues(${JSON.stringify({ tabStops: tabStopsArray.toString() })})`)
-      .then(res => browserWindow.show())
       .catch(error => log(error))
   });
 
@@ -71,43 +70,70 @@ export function onShutdown() {
   }
 }
 
-function update(tabInterval) {
+function update(obj) {
 
-  // console.log("tabInterval")
-  // console.log(tabInterval)
+  var newTabStops = obj.tabStops;
 
-  if(tabInterval == "auto") {
+  console.log('obj.tabStops')
+  console.log(obj.tabStops)
+
+  if(newTabStops == "auto") {
     // set bullet spacing based on font size and a good harmony
   }
 
   let document = Document.getSelectedDocument();
   let selectedLayers = document.selectedLayers;
 
-  selectedLayers.layers.forEach((layer) => {
+  selectedLayers.forEach((layer) => {
     var currentTabStops = layer.sketchObject.attributedStringValue().attributeForKey("NSParagraphStyle").treeAsDictionary().style.tabStops;
+    // console.log('currentTabStops')
+    // console.log(currentTabStops)
+    var tabIntervalArray = Object.values(newTabStops);
+    tabIntervalArray.forEach((item) => { item = parseInt(item); })
+    //var tabIntervalArray = [16,32,48,64,80,96,112,128,144,160,176,192,208];
 
-    //tabIntervalArray = Object.values(tabInterval);
-    //tabIntervalArray.forEach((item) => { item = parseInt(item); })
-    var tabIntervalArray = [16,32,48,64,80,96,112,128,144,160,176,192,208];
-
-    var newTabStopsArray = [];
-    tabIntervalArray.forEach((stop, i) => {
-      newTabStopsArray.push(NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, stop));
-    });
-
-    //console.log("currentTabStops")
-    //console.log(currentTabStops)
-    //console.log(getSelectedLayerTabStops())
-
-    //console.log("newTabStopsArray")
-    //console.log(newTabStopsArray)
+    // var newTabStopsArray = [];
+    // tabIntervalArray.forEach((stop, i) => {
+    //   newTabStopsArray.push(NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, stop));
+    // });
 
     var paragraphStyle = layer.sketchObject.attributedStringValue().attributeForKey("NSParagraphStyle");
-    paragraphStyle.tabStops = newTabStopsArray;
-    paragraphStyle.headIndent = newTabStops[1];
+
+    tabIntervalArray.forEach((stop, i) => {
+      paragraphStyle.tabStops()[i] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, stop);
+    })
+    // paragraphStyle.tabStops()[0] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, tabIntervalArray[0]);
+    // paragraphStyle.tabStops()[1] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, tabIntervalArray[1]);
+    // paragraphStyle.tabStops()[2] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, tabIntervalArray[2]);
+    // paragraphStyle.tabStops()[3] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, tabIntervalArray[3]);
+    // paragraphStyle.tabStops()[4] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, tabIntervalArray[4]);
+    // paragraphStyle.tabStops()[5] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, tabIntervalArray[5]);
+    // paragraphStyle.tabStops()[6] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, tabIntervalArray[6]);
+    // paragraphStyle.tabStops()[7] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, tabIntervalArray[7]);
+    // paragraphStyle.tabStops()[8] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, tabIntervalArray[8]);
+    // paragraphStyle.tabStops()[9] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, tabIntervalArray[9]);
+    // paragraphStyle.tabStops()[10] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, tabIntervalArray[10]);
+    // paragraphStyle.tabStops()[11] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, tabIntervalArray[11]);
+    // paragraphStyle.tabStops()[12] = NSTextTab.alloc().initWithType_location(NSTextAlignmentLeft, tabIntervalArray[12]);
+    paragraphStyle.headIndent = tabIntervalArray[1];
+
+    //paragraphStyle.tabStops()[0] = newTabStopsArray[0];
+    // paragraphStyle.tabStops()[1] = newTabStopsArray[1];
+    // paragraphStyle.tabStops()[2] = newTabStopsArray[2];
+    // paragraphStyle.tabStops()[3] = newTabStopsArray[3];
+    // paragraphStyle.tabStops()[4] = newTabStopsArray[4];
+    // paragraphStyle.tabStops()[5] = newTabStopsArray[5];
+    // paragraphStyle.tabStops()[6] = newTabStopsArray[6];
+    // paragraphStyle.tabStops()[7] = newTabStopsArray[7];
+    // paragraphStyle.tabStops()[8] = newTabStopsArray[8];
+    // paragraphStyle.tabStops()[9] = newTabStopsArray[9];
+    // paragraphStyle.tabStops()[10] = newTabStopsArray[10];
+    // paragraphStyle.tabStops()[11] = newTabStopsArray[11];
+    // paragraphStyle.tabStops()[12] = newTabStopsArray[12];
+    //paragraphStyle.headIndent = newTabStopsArray[1];
 
     console.log('final tabStops')
-    console.log(paragraphStyle.tabStops)
+    console.log(paragraphStyle.tabStops())
 
   });
 

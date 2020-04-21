@@ -28,7 +28,7 @@ document.getElementById('button').addEventListener('click', () => {
     parseInt(document.getElementById('tabInterval11').value) || defaultTabStops[11],
     parseInt(document.getElementById('tabInterval12').value) || defaultTabStops[12]
   ]
-  window.postMessage('update', tabStopsArray);
+  window.postMessage('update', { tabStops: tabStopsArray });
 })
 
 // call the wevbiew from the plugin
