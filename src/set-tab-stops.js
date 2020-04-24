@@ -105,8 +105,5 @@ function getSelectedLayerTabStops() {
 
   var selectedTabStops = selectedLayers.layers[0].sketchObject.attributedStringValue().attributeForKey("NSParagraphStyle").treeAsDictionary().style.tabStops;
 
-  console.log('selectedTabStops')
-  console.log(selectedTabStops)
-
   return selectedTabStops;
 }
