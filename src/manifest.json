@@ -275,6 +275,79 @@
         }
       },
       "description": "Adjust the spacing between tabs in a text list."
+    },
+    {
+      "name": "Apply Responsive Type",
+      "identifier": "intouch-toolkit.responsive-type.apply",
+      "script": "./responsive-type.js",
+      "handlers": {
+        "run": "onRun",
+        "actions": {
+          "Shutdown": "onShutdown",
+          "LayersResized.finish": "onLayersResized",
+          "Paste.finish": "onLayersResized"
+        }
+      },
+      "description": "Applies responsive type sizing."
+    },
+    {
+      "name": "Step Up",
+      "identifier": "intouch-toolkit.responsive-type.step-up",
+      "script": "./responsive-type.js",
+      "handlers": {
+        "run": "stepUp"
+      },
+      "description": "Bumps font size up in the type scale."
+    },
+    {
+      "name": "Step Down",
+      "identifier": "intouch-toolkit.responsive-type.step-down",
+      "script": "./responsive-type.js",
+      "handlers": {
+        "run": "stepDown"
+      },
+      "description": "Bumps font size up in the type scale."
+    },
+    {
+      "name": "Display",
+      "identifier": "intouch-toolkit.responsive-type.set.display",
+      "script": "./responsive-type.js",
+      "handlers": { "run": "setAsDisplay" }
+    },
+    {
+      "name": "Heading",
+      "identifier": "intouch-toolkit.responsive-type.set.heading",
+      "script": "./responsive-type.js",
+      "handlers": { "run": "setAsHeading" }
+    },
+    {
+      "name": "Body",
+      "identifier": "intouch-toolkit.responsive-type.set.body",
+      "script": "./responsive-type.js",
+      "handlers": { "run": "setAsBody" }
+    },
+    {
+      "name": "Update Stack",
+      "identifier": "intouch-toolkit.stack.update",
+      "script": "./stack.js",
+      "handlers": {
+        "run": "onRun",
+        "actions": {
+          "SelectionChanged.finish": "onRun",
+          "LayersResized.finish": "onRun",
+          "LayersMoved.finish": "onRun",
+          "LayerHeightFocus": "onRun",
+          "TextChanged": "onRun"
+        }
+      }
+    },
+    {
+      "name": "Apply Stack",
+      "identifier": "intouch-toolkit.stack.apply",
+      "script": "./stack.js",
+      "handlers": {
+        "run": "applyStack"
+      }
     }
   ],
   "menu": {
@@ -335,7 +408,20 @@
         "title": "Experimental",
         "items": [
           "intouch-toolkit.set-tab-stops",
-          "intouch-toolkit.find-and-replace-text"
+          "intouch-toolkit.find-and-replace-text",
+          "intouch-toolkit.stack.apply",
+          {
+            "title": "Responsive Type",
+            "items": [
+              "intouch-toolkit.responsive-type.applyStack",
+              "intouch-toolkit.responsive-type.step-up",
+              "intouch-toolkit.responsive-type.step-down",
+              "-",
+              "intouch-toolkit.responsive-type.set.display",
+              "intouch-toolkit.responsive-type.set.heading",
+              "intouch-toolkit.responsive-type.set.body"
+            ]
+          }
         ]
       }
     ]

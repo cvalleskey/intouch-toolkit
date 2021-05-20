@@ -35,7 +35,7 @@
     "resources/**/*.js"
   ],
   "dependencies": {
-    "sketch-module-google-analytics": "^0.2.1",
+    "sketch-module-google-analytics": "^0.2.2",
     "sketch-module-web-view": "^3.4.1"
   },
   "author": "Chris Valleskey <chris.valleskey@intouchsol.com>"

@@ -25,7 +25,6 @@ var selectedLayers = document.selectedLayers;
 let page = document.selectedPage;
 
 var settings = {
-  "scale" : 0.625,
   "scope" : 'global' // 'global' | 'page' | 'artboard' | 'selection'
 }
 
